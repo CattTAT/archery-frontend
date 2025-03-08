@@ -9,15 +9,28 @@ const theme = createTheme({
       contrastText: "#FFFFFF",
     },
     secondary: {
-        main: "#E0E0E0",
-        light: "#E0E0E0",
-        dark: "#E0E0E0",
-        contrastText: "#FFFFFF",
+      main: "#E0E0E0",
+      light: "#E0E0E0",
+      dark: "#E0E0E0",
+      contrastText: "#FFFFFF",
     },
     background: {
       default: "#FFE590",
     },
-    
+  },
+  typography: {
+    fontFamily: "'Jersey 25', sans-serif",
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          fontFamily: "'Jersey 25', sans-serif",
+          backgroundColor: "#FFE590",
+          padding: "16px",
+        },
+      },
+    },
   },
 });
 

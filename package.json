@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fontsource/jersey-25": "^5.2.5",
     "@mui/material": "^6.4.7",
     "archery-frontend": "file:",
     "axios": "^1.7.9",

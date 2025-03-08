@@ -4,12 +4,13 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Home from "./pages/Home";
 import Scoresheets from "./pages/Scoresheets";
 import Personal from "./pages/Personal";
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./lib/theme";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <BrowserRouter>
         <div className="app">
           <Routes>
