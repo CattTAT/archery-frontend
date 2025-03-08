@@ -1,14 +1,73 @@
+import React, { useState } from "react";
 import { NavLink } from "react-router";
+import { Icon } from "@iconify/react";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 
 export function MenuBar() {
+  const [value, setValue] = useState(0);
+
+  const menuItems = [
+    {
+      label: "Home",
+      icon: <Icon icon="lucide:home" style={{ fontSize: "36px" }} />,
+      nav: "/",
+    },
+    {
+      label: "Score",
+      icon: <Icon icon="jam:write" style={{ fontSize: "36px" }} />,
+      nav: "/scoresheets",
+    },
+    {
+      label: "Stats",
+      icon: <Icon icon="wpf:statistics" style={{ fontSize: "36px" }} />,
+      nav: "/statistics",
+    },
+    {
+      label: "Tools",
+      icon: <Icon icon="tabler:bow" style={{ fontSize: "36px" }} />,
+      nav: "/equipment",
+    },
+  ];
+
   return (
-    <nav>
-      <NavLink to="/" end>
-        Home
-      </NavLink>
-      <NavLink to="/scoresheets" end>
-        Scoresheets
-      </NavLink>
-    </nav>
+    <Box sx={{ width: 1, height: "80px" }}>
+      <Paper
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "80px",
+          backgroundColor: "background.default",
+        }}
+        elevation={1}
+      >
+        <BottomNavigation
+          showLabels
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+          sx={{ backgroundColor: "primary.main", borderRadius: "50px" }}
+        >
+          {menuItems.map((item) => (
+            <BottomNavigationAction
+              key={item.label}
+              label={item.label}
+              icon={item.icon}
+              component={NavLink}
+              to={item.nav}
+              sx={{
+                color: "primary.contrastText",
+                "&.Mui-selected": { color: "grey" },
+              }}
+            />
+          ))}
+        </BottomNavigation>
+      </Paper>
+    </Box>
   );
 }
