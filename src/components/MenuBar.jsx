@@ -12,62 +12,69 @@ export function MenuBar() {
   const menuItems = [
     {
       label: "Home",
-      icon: <Icon icon="lucide:home" style={{ fontSize: "36px" }} />,
+      icon: <Icon icon="lucide:home" style={{ fontSize: 32 }} />,
       nav: "/",
     },
     {
       label: "Score",
-      icon: <Icon icon="jam:write" style={{ fontSize: "36px" }} />,
+      icon: <Icon icon="jam:write" style={{ fontSize: 32 }} />,
       nav: "/scoresheets",
     },
     {
       label: "Stats",
-      icon: <Icon icon="wpf:statistics" style={{ fontSize: "36px" }} />,
+      icon: <Icon icon="wpf:statistics" style={{ fontSize: 32 }} />,
       nav: "/statistics",
     },
     {
       label: "Tools",
-      icon: <Icon icon="tabler:bow" style={{ fontSize: "36px" }} />,
+      icon: <Icon icon="tabler:bow" style={{ fontSize: 32 }} />,
       nav: "/equipment",
     },
   ];
 
   return (
-    <Box sx={{ width: 1, height: "80px" }}>
-      <Paper
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "80px",
-          backgroundColor: "background.default",
+    <Paper
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "background.default",
+        padding: "16px",
+      }}
+      elevation={0}
+    >
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
         }}
-        elevation={1}
+        sx={{
+          backgroundColor: "primary.main",
+          borderRadius: "50px",
+          padding: "4px",
+          height: "72px",
+        }}
       >
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-          sx={{ backgroundColor: "primary.main", borderRadius: "50px" }}
-        >
-          {menuItems.map((item) => (
-            <BottomNavigationAction
-              key={item.label}
-              label={item.label}
-              icon={item.icon}
-              component={NavLink}
-              to={item.nav}
-              sx={{
-                color: "primary.contrastText",
-                "&.Mui-selected": { color: "grey" },
-              }}
-            />
-          ))}
-        </BottomNavigation>
-      </Paper>
-    </Box>
+        {menuItems.map((item) => (
+          <BottomNavigationAction
+            key={item.label}
+            label={item.label}
+            icon={item.icon}
+            component={NavLink}
+            to={item.nav}
+            sx={{
+              color: "primary.contrastText",
+              "&.Mui-selected": { color: "black" },
+              "& .MuiBottomNavigationAction-label": {
+                fontSize: "22px !important",
+                lineHeight: 1,
+              },
+            }}
+          />
+        ))}
+      </BottomNavigation>
+    </Paper>
   );
 }
