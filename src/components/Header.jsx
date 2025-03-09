@@ -17,12 +17,28 @@ const PersonalIcon = styled(IconButton)(({ theme }) => ({
 const Header = ({page}) => {
   return (
     <>
-    <Grid container direction="row" justifyContent="space-between" alignItems="center">
-      <Typography variant="h2">{page}</Typography>
-      <PersonalIcon aria-label="personal" color="primary" size="large" component={NavLink} to="/personal">
-          <Icon icon="material-symbols:person-outline" style={{ fontSize: 32 }} />    
-      </PersonalIcon>
-    </Grid>
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h2" maxWidth={4 / 5}>
+          {page}
+        </Typography>
+        <PersonalIcon
+          aria-label="personal"
+          color="primary"
+          size="large"
+          component={NavLink}
+          to="/personal"
+        >
+          <Icon
+            icon="material-symbols:person-outline"
+            style={{ fontSize: 36 }}
+          />
+        </PersonalIcon>
+      </Grid>
     </>
   );
 };
