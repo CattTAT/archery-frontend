@@ -1,11 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
-import Home from "./pages/Home";
 import Scoresheets from "./pages/Scoresheets";
+import Login from "./pages/Login";
 import Personal from "./pages/Personal";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./lib/theme";
+import Home from "./pages/Home";
+import NewScoresheet from "./pages/NewScoresheet";
 
 function App() {
   return (
@@ -14,9 +15,13 @@ function App() {
       <BrowserRouter>
         <div className="app">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/scoresheets" element={<Scoresheets />} />
-            <Route path="/personal" element={<Personal />} />
+            <Route
+              path="/personal"
+              element={<Personal isRegistration={false} />}
+            />
           </Routes>
         </div>
       </BrowserRouter>

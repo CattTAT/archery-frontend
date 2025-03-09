@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Paper } from "@mui/material";
 import styled from "@mui/material/styles/styled";
 import { MenuBar } from "../components/MenuBar";
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Grid from '@mui/material/Grid2';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Grid from "@mui/material/Grid2";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 const InformationForm = styled(Paper)(({ theme }) => ({
@@ -19,8 +19,8 @@ const InformationForm = styled(Paper)(({ theme }) => ({
   display: "flex",
 }));
 
-const Personal = () => {
-  const [name, setName] = React.useState('');
+const Personal = ({ isRegistration }) => {
+  const [name, setName] = React.useState("");
   const [gender, setGender] = React.useState("Male");
   const [eyeSight, setEyeSight] = React.useState("Left");
   const [bowType, setBowType] = React.useState("Recurve");
@@ -28,7 +28,11 @@ const Personal = () => {
 
   return (
     <>
-      <Typography variant="h2">User Profile</Typography>
+      {isRegistration ? (
+        <Typography variant="h2">Registration</Typography>
+      ) : (
+        <Typography variant="h2">User Profile</Typography>
+      )}
       <InformationForm square={false} elevation={3}>
         <Grid container direction="column" spacing={2} height="100%">
           <Grid>
@@ -87,7 +91,7 @@ const Personal = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               variant="standard"
-              sx={{ flexGrow: 1}}
+              sx={{ flexGrow: 1 }}
               value={level}
               onChange={(e) => setLevel(e.target.value)}
             >
@@ -97,13 +101,23 @@ const Personal = () => {
               <MenuItem value={"Advance"}>Advance</MenuItem>
             </Select>
           </Grid>
-          
-          <Button variant="contained" startIcon={<Icon icon="material-symbols:save-outline" />} sx={{mt: 8, color:"black", fontSize: 20, lineHeight: 1, padding: "8px"}}>
+
+          <Button
+            variant="contained"
+            startIcon={<Icon icon="material-symbols:save-outline" />}
+            sx={{
+              mt: 8,
+              color: "black",
+              fontSize: 20,
+              lineHeight: 1,
+              padding: "8px",
+            }}
+          >
             Save
-          </Button>        
+          </Button>
         </Grid>
       </InformationForm>
-      <MenuBar />
+      {!isRegistration && <MenuBar />}
     </>
   );
 };

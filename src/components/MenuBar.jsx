@@ -13,7 +13,7 @@ export function MenuBar() {
     {
       label: "Home",
       icon: <Icon icon="lucide:home" style={{ fontSize: 32 }} />,
-      nav: "/",
+      nav: "/home",
     },
     {
       label: "Score",
@@ -40,7 +40,7 @@ export function MenuBar() {
         left: 0,
         right: 0,
         backgroundColor: "background.default",
-        padding: "16px",
+        padding: "20px",
       }}
       elevation={0}
     >
@@ -66,7 +66,7 @@ export function MenuBar() {
             to={item.nav}
             sx={{
               color: "primary.contrastText",
-              "&.Mui-selected": { color: "black" },
+              "&.Mui-selected": { color: "white" },
               "& .MuiBottomNavigationAction-label": {
                 fontSize: "22px !important",
                 lineHeight: 1,
