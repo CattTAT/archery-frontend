@@ -27,7 +27,7 @@ const theme = createTheme({
         body: {
           fontFamily: "'Jersey 25', sans-serif",
           backgroundColor: "#FFE590",
-          padding: "16px",
+          padding: "32px",
         },
       },
     },
