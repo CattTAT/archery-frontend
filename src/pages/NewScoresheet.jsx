@@ -1,13 +1,13 @@
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
 
-const Scoresheets = () => {
+const NewScoresheet = () => {
   return (
     <>
-      <Header page="Scoresheets" />
+      <Header page="New Scoresheet" />
       <MenuBar />
     </>
   );
 };
 
-export default Scoresheets;
+export default NewScoresheet;

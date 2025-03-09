@@ -7,6 +7,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./lib/theme";
 import Home from "./pages/Home";
 import NewScoresheet from "./pages/NewScoresheet";
+import Statistics from "./pages/Statistics";
+import Equipment from "./pages/Equipment";
+import NewEquipment from "./pages/NewEquipment";
 
 function App() {
   return (
@@ -18,6 +21,10 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/scoresheets" element={<Scoresheets />} />
+            <Route path="/new-scoresheet" element={<NewScoresheet />} />
+            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/equipment" element={<Equipment />} />
+            <Route path="/new-equipment" element={<NewEquipment />} />
             <Route
               path="/personal"
               element={<Personal isRegistration={false} />}

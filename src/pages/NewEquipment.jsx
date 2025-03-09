@@ -1,13 +1,13 @@
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
 
-const Scoresheets = () => {
+const NewEquipment = () => {
   return (
     <>
-      <Header page="Scoresheets" />
+      <Header page="New Equipment" />
       <MenuBar />
     </>
   );
 };
 
-export default Scoresheets;
+export default NewEquipment;
