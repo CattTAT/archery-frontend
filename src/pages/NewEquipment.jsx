@@ -37,6 +37,7 @@ const NewEquipment = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
+          autoComplete="off"
         />
         <Typography variant="h4">Type:</Typography>
         <Select
@@ -60,6 +61,7 @@ const NewEquipment = () => {
           onChange={(e) => setMeasurement(e.target.value)}
           fullWidth
           multiline
+          autoComplete="off"
           rows={5}
         />
         <Button

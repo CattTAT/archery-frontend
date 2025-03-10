@@ -44,6 +44,7 @@ const Personal = ({ isRegistration }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               fullWidth
+              autoComplete="off"
             />
           </Grid>
           <Grid container direction="row" spacing={2}>
