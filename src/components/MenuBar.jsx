@@ -33,48 +33,50 @@ export function MenuBar() {
   ];
 
   return (
-    <Paper
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: "background.default",
-        padding: "20px",
-      }}
-      elevation={0}
-    >
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
+    <Box sx={{ height: "120px" }}>
+      <Paper
         sx={{
-          backgroundColor: "primary.main",
-          borderRadius: "50px",
-          padding: "4px",
-          height: "72px",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "background.default",
+          padding: "20px",
         }}
+        elevation={0}
       >
-        {menuItems.map((item) => (
-          <BottomNavigationAction
-            key={item.label}
-            label={item.label}
-            icon={item.icon}
-            component={NavLink}
-            to={item.nav}
-            sx={{
-              color: "primary.contrastText",
-              "&.Mui-selected": { color: "white" },
-              "& .MuiBottomNavigationAction-label": {
-                fontSize: "22px !important",
-                lineHeight: 1,
-              },
-            }}
-          />
-        ))}
-      </BottomNavigation>
-    </Paper>
+        <BottomNavigation
+          showLabels
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+          sx={{
+            backgroundColor: "primary.main",
+            borderRadius: "50px",
+            padding: "4px",
+            height: "72px",
+          }}
+        >
+          {menuItems.map((item) => (
+            <BottomNavigationAction
+              key={item.label}
+              label={item.label}
+              icon={item.icon}
+              component={NavLink}
+              to={item.nav}
+              sx={{
+                color: "primary.contrastText",
+                "&.Mui-selected": { color: "white" },
+                "& .MuiBottomNavigationAction-label": {
+                  fontSize: "22px !important",
+                  lineHeight: 1,
+                },
+              }}
+            />
+          ))}
+        </BottomNavigation>
+      </Paper>
+    </Box>
   );
 }
