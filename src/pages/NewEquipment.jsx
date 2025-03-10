@@ -17,6 +17,7 @@ const NewEquipForm = styled(Paper)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(1),
+  borderRadius: "10px",
 }));
 
 const NewEquipment = () => {
