@@ -1,20 +1,11 @@
 import React from "react";
-import IconButton from "@mui/material/IconButton";
 import { Icon } from "@iconify/react";
 import { NavLink } from "react-router";
-import { styled, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import Fab from "@mui/material/Fab";
 
-const PersonalIcon = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
-    "&:hover": {
-        backgroundColor: theme.palette.primary.main,
-        opacity: 0.8,
-    },
-  }));
-
-const Header = ({page}) => {
+const Header = ({ page }) => {
   return (
     <>
       <Grid
@@ -26,9 +17,9 @@ const Header = ({page}) => {
         <Typography variant="h2" maxWidth={4 / 5}>
           {page}
         </Typography>
-        <PersonalIcon
-          aria-label="personal"
+        <Fab
           color="primary"
+          aria-label="personal"
           size="large"
           component={NavLink}
           to="/personal"
@@ -37,7 +28,7 @@ const Header = ({page}) => {
             icon="material-symbols:person-outline"
             style={{ fontSize: 36 }}
           />
-        </PersonalIcon>
+        </Fab>
       </Grid>
     </>
   );
