@@ -19,6 +19,14 @@ const InformationForm = styled(Paper)(({ theme }) => ({
   display: "flex",
 }));
 
+const ToggleButtonGroupStyled = styled(ToggleButtonGroup)(({ theme }) => ({
+  backgroundColor: "#D8D8D8",
+  "& .Mui-selected": {
+    backgroundColor: theme.palette.primary.main + "!important",
+    color: "white !important",
+  },
+}));
+
 const Personal = ({ isRegistration }) => {
   const [name, setName] = React.useState("");
   const [gender, setGender] = React.useState("Male");
@@ -49,42 +57,41 @@ const Personal = ({ isRegistration }) => {
           </Grid>
           <Grid container direction="row" spacing={2}>
             <Typography variant="h4">Gender:</Typography>
-            <ToggleButtonGroup
-              color="primary"
+            <ToggleButtonGroupStyled
               value={gender}
               exclusive
               onChange={(e) => setGender(e.target.value)}
-              aria-label="Platform"
+              aria-label="gender"
             >
               <ToggleButton value="Male">Male</ToggleButton>
               <ToggleButton value="Female">Female</ToggleButton>
-            </ToggleButtonGroup>
+            </ToggleButtonGroupStyled>
           </Grid>
           <Grid container direction="row" spacing={2}>
             <Typography variant="h4">Eye Sight:</Typography>
-            <ToggleButtonGroup
+            <ToggleButtonGroupStyled
               color="primary"
               value={eyeSight}
               exclusive
               onChange={(e) => setEyeSight(e.target.value)}
-              aria-label="Platform"
+              aria-label="eyeSight"
             >
               <ToggleButton value="Left">Left</ToggleButton>
               <ToggleButton value="Right">Right</ToggleButton>
-            </ToggleButtonGroup>
+            </ToggleButtonGroupStyled>
           </Grid>
           <Grid container direction="row" spacing={2}>
             <Typography variant="h4">Bow Type:</Typography>
-            <ToggleButtonGroup
+            <ToggleButtonGroupStyled
               color="primary"
               value={bowType}
               exclusive
               onChange={(e) => setBowType(e.target.value)}
-              aria-label="Platform"
+              aria-label="bowType"
             >
               <ToggleButton value="Recurve">Recurve</ToggleButton>
               <ToggleButton value="Compound">Compound</ToggleButton>
-            </ToggleButtonGroup>
+            </ToggleButtonGroupStyled>
           </Grid>
           <Grid container direction="row" spacing={2}>
             <Typography variant="h4">Level:</Typography>
