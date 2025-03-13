@@ -13,6 +13,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Switch from "@mui/material/Switch";
 import IconButton from "@mui/material/IconButton";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import ConfirmDialog from "../components/ConfirmDialog";
+
 import {
   Dialog,
   DialogActions,
@@ -104,16 +106,13 @@ const NewScoresheet = () => {
   const [sets, setSets] = React.useState("");
   const [arrows, setArrows] = React.useState("");
   const [arrowLocation, setArrowLocation] = React.useState(true);
-  const [open, setOpen] = React.useState(false);
+  const [openTargetFaceInfo, setOpenTargeFaceInfo] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+
+  const HandleConfirmDialog = () => {
+    setOpenConfirmDialog(false);
   };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
       <Header page="New Scoresheet" />
@@ -145,11 +144,17 @@ const NewScoresheet = () => {
 
         <Grid2 container direction="row" spacing={1} alignItems={"center"}>
           <Typography variant="h5">Target Face:</Typography>
-          <IconButton aria-label="info" onClick={handleClickOpen}>
+          <IconButton
+            aria-label="info"
+            onClick={() => setOpenTargeFaceInfo(true)}
+          >
             <Icon icon="material-symbols:info" />
           </IconButton>
         </Grid2>
-        <TargetFaceInfoDialog open={open} onClose={handleClose} />
+        <TargetFaceInfoDialog
+          open={openTargetFaceInfo}
+          onClose={() => setOpenTargeFaceInfo(false)}
+        />
         <Select
           labelId="select-targetFace"
           id="select-targetFace"
@@ -229,10 +234,18 @@ const NewScoresheet = () => {
             padding: "8px",
             borderRadius: "10px",
           }}
+          onClick={() => setOpenConfirmDialog(true)}
         >
           Start
         </Button>
       </NewScoresheetForm>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={() => setOpenConfirmDialog(false)}
+        onConfirm={HandleConfirmDialog}
+        title="Confirm Creating Scoresheet?"
+        content="Please note that scoresheet settings cannot modified after created"
+      />
       <MenuBar />
     </>
   );
