@@ -6,6 +6,13 @@ import {
   Typography,
   Stack,
   Chip,
+  Select,
+  InputLabel,
+  FormControl,
+  OutlinedInput,
+  Box,
+  Checkbox,
+  ListItemText,
 } from "@mui/material";
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
@@ -127,8 +134,22 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
 };
 
 const Equipment = () => {
-  const [EquipmentTypeFilter, setEquipmentTypeFilter] =
-    React.useState("All Equipment");
+  const [equipmentTypeFilter, setEquipmentTypeFilter] = React.useState([
+    "Arrow",
+    "Bow",
+    "Sight",
+  ]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setEquipmentTypeFilter(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
   return (
     <>
       <Header page="Equipment" />
@@ -147,18 +168,32 @@ const Equipment = () => {
         >
           New Equipment
         </Button>
-        <TextField
-          select
-          value={EquipmentTypeFilter}
-          onChange={(e) => setEquipmentTypeFilter(e.target.value)}
-          label="Equipment Type"
-        >
-          {" "}
-          <MenuItem value={"Arrow"}>Arrow</MenuItem>
-          <MenuItem value={"Bow"}>Bow</MenuItem>
-          <MenuItem value={"Sight"}>Sight</MenuItem>
-          <MenuItem value={"All Equipment"}>All Equipment</MenuItem>
-        </TextField>
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="multiple-checkbox-label">Equipment Type</InputLabel>
+          <Select
+            labelId="multiple-checkbox-label"
+            id="multiple-checkbox"
+            multiple
+            value={equipmentTypeFilter}
+            onChange={handleChange}
+            input={<OutlinedInput label="Equipment Type" />}
+            renderValue={(selected) => selected.sort().join(", ")}
+          >
+            <MenuItem value={"Arrow"}>
+              <Checkbox checked={equipmentTypeFilter.indexOf("Arrow") > -1} />
+              <ListItemText primary="Arrow" />
+            </MenuItem>
+            <MenuItem value={"Bow"}>
+              <Checkbox checked={equipmentTypeFilter.indexOf("Bow") > -1} />
+              <ListItemText primary="Bow" />
+            </MenuItem>
+            <MenuItem value={"Sight"}>
+              <Checkbox checked={equipmentTypeFilter.indexOf("Sight") > -1} />
+              <ListItemText primary="Sight" />
+            </MenuItem>
+          </Select>
+        </FormControl>
+        {/* filter implement in backend */}
         {EquipmentList.map((equipment) => (
           <EquipmentCardList
             key={equipment.id}
