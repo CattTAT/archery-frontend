@@ -143,7 +143,7 @@ const Equipment = () => {
 
   let params = useParams();
   useEffect(() => {
-    if (params.type) {
+    if (params.type && params.type.toLocaleLowerCase() !== "all") {
       setEquipmentTypeFilter([params.type]);
     }
   }, [params.type]);
