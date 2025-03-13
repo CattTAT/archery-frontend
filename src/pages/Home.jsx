@@ -68,7 +68,7 @@ const Home = () => {
                 component={NavLink}
                 to="/scoresheets"
               >
-                View Scoresheet
+                View All Scoresheet
               </HomePageButton>
             </Grid>
           </Grid>
@@ -83,7 +83,7 @@ const Home = () => {
             component={NavLink}
             to="/statistics"
           >
-            View Statistics
+            View All Statistics
           </HomePageButton>
         </DashboardPaper>
         <DashboardPaper square={false} elevation={1}>

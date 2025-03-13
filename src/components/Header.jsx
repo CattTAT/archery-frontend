@@ -13,6 +13,7 @@ const Header = ({ page }) => {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
+        marginBottom={1}
       >
         <Typography variant="h2" maxWidth={4 / 5}>
           {page}
