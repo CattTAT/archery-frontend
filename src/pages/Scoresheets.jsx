@@ -1,13 +1,25 @@
 import React from "react";
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
-import { Button, Card, Grid2, Paper, Stack } from "@mui/material";
+import {
+  Button,
+  Card,
+  Grid2,
+  Paper,
+  Stack,
+  Select,
+  InputLabel,
+  FormControl,
+  OutlinedInput,
+  Checkbox,
+  ListItemText,
+  MenuItem,
+  Chip,
+  TextField,
+  Typography,
+} from "@mui/material";
 import styled from "@mui/material/styles/styled";
-import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import Chip from "@mui/material/Chip";
-import TextField from "@mui/material/TextField";
 import { NavLink } from "react-router";
 
 const ScoresheetListPaper = styled(Paper)(({ theme }) => ({
@@ -28,7 +40,7 @@ const ScoresheetsFilter = styled(TextField)(({ theme }) => ({
   width: "50%",
 }));
 
-const scoresheetsDistances = ["18M", "30M", "50M", "70M"];
+const scoresheetsDistances = ["18M", "25M", "30M", "50M", "70M", "90M"];
 const scoresheets = [
   {
     id: 0,
@@ -145,7 +157,19 @@ const ScoresheetCard = ({ name, status, date, distance, lastModified }) => {
 
 const Scoresheets = () => {
   const [dateFilter, setDateFilter] = React.useState("All Time");
-  const [distanceFilter, setDistanceFilter] = React.useState("All Distances");
+  const [distanceFilter, setDistanceFilter] = React.useState([
+    ...scoresheetsDistances,
+  ]);
+
+  const handleDistanceChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setDistanceFilter(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
 
   return (
     <>
@@ -179,21 +203,33 @@ const Scoresheets = () => {
             <MenuItem value={"All Time"}>All Time</MenuItem>
           </ScoresheetsFilter>
 
-          <ScoresheetsFilter
-            select
-            value={distanceFilter}
-            onChange={(e) => setDistanceFilter(e.target.value)}
-            label="Distance"
-          >
-            {scoresheetsDistances.map((distance) => (
-              <MenuItem key={distance} value={distance}>
-                {distance}
-              </MenuItem>
-            ))}
-            <MenuItem value={"All Distances"}>All Distances</MenuItem>
-          </ScoresheetsFilter>
+          <FormControl sx={{ m: 1, width: 300 }}>
+            <InputLabel
+              id="multiple-checkbox-label"
+              sx={{ fontSize: 20, color: "primary.main" }}
+            >
+              Distance
+            </InputLabel>
+            <Select
+              labelId="multiple-checkbox-label"
+              id="multiple-checkbox"
+              multiple
+              value={distanceFilter}
+              onChange={handleDistanceChange}
+              input={<OutlinedInput label="Distance" />}
+              renderValue={(selected) => selected.sort().join(", ")}
+              autoFocus
+            >
+              {scoresheetsDistances.map((distance) => (
+                <MenuItem key={distance} value={distance}>
+                  <Checkbox checked={distanceFilter.indexOf(distance) > -1} />
+                  <ListItemText primary={distance} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Stack>
-
+        {/* filter implement in backend */}
         {scoresheets.map((scoresheet) => (
           <ScoresheetCard
             key={scoresheet.id}
