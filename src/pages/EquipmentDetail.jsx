@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
 import { Paper } from "@mui/material";
@@ -9,8 +9,9 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useParams } from "react-router";
 
-const NewEquipForm = styled(Paper)(({ theme }) => ({
+const EquipDetailForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   ...theme.typography.body2,
   height: "100%",
@@ -20,15 +21,30 @@ const NewEquipForm = styled(Paper)(({ theme }) => ({
   borderRadius: "10px",
 }));
 
-const NewEquipment = () => {
+const EquipmentDetail = () => {
+  const [id, setId] = React.useState(null);
   const [name, setName] = React.useState("");
   const [type, setType] = React.useState("");
   const [measurement, setMeasurement] = React.useState("");
 
+  let params = useParams();
+  useEffect(() => {
+    if (params.id) {
+      setId(params.id);
+    }
+  }, [params.id]);
+
+  useEffect(() => {
+    console.log(id);
+  }
+  , [id]);
+
+  const headerTitle = id ? "Edit Equipment" : "New Equipment";
+
   return (
     <>
-      <Header page="New Equipment" />
-      <NewEquipForm square={false} elevation={3}>
+      <Header page={headerTitle} />
+      <EquipDetailForm square={false} elevation={3}>
         <Typography variant="h4">Name:</Typography>
         <TextField
           id="name"
@@ -76,10 +92,10 @@ const NewEquipment = () => {
         >
           Save
         </Button>
-      </NewEquipForm>
+      </EquipDetailForm>
       <MenuBar />
     </>
   );
 };
 
-export default NewEquipment;
+export default EquipmentDetail;

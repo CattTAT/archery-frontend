@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import NewScoresheet from "./pages/NewScoresheet";
 import Statistics from "./pages/Statistics";
 import Equipment from "./pages/Equipment";
-import NewEquipment from "./pages/NewEquipment";
+import EquipmentDetail from "./pages/EquipmentDetail";
 
 function App() {
   return (
@@ -24,7 +24,9 @@ function App() {
             <Route path="/new-scoresheet" element={<NewScoresheet />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/equipment" element={<Equipment />} />
-            <Route path="/new-equipment" element={<NewEquipment />} />
+            <Route path="/new-equipment" element={<EquipmentDetail />} />
+            <Route path="/edit-equipment/:id" element={<EquipmentDetail />} />
+
             <Route
               path="/personal"
               element={<Personal isRegistration={false} />}
