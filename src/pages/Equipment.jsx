@@ -21,6 +21,7 @@ import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
 import React, { useEffect } from "react";
+import { useParams } from "react-router";
 
 const EquipmentListPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -139,6 +140,13 @@ const Equipment = () => {
     "Bow",
     "Sight",
   ]);
+
+  let params = useParams();
+  useEffect(() => {
+    if (params.type) {
+      setEquipmentTypeFilter([params.type]);
+    }
+  }, [params.type]);
 
   const handleChange = (event) => {
     const {

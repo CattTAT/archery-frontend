@@ -22,9 +22,9 @@ const Home = () => {
 
   const HomePageButton = styled(Button)(({ theme }) => ({
     color: "black",
-    fontSize: 20,
+    fontSize: 18,
     lineHeight: 1,
-    padding: "8px",
+    padding: "12px",
     width: "100%",
     height: "100%",
     borderRadius: 10,
@@ -88,8 +88,8 @@ const Home = () => {
         </DashboardPaper>
         <DashboardPaper square={false} elevation={1}>
           <Typography variant="h5">My Equipments</Typography>
-          <Grid container direction="row" spacing={2} columns={16}>
-            <Grid item size={8}>
+          <Grid container direction="row" spacing={2} columns={12}>
+            <Grid item size={12}>
               <HomePageButton
                 variant="contained"
                 startIcon={<Icon icon="material-symbols:add-rounded" />}
@@ -99,27 +99,33 @@ const Home = () => {
                 New Equipment
               </HomePageButton>
             </Grid>
-            <Grid item size={8}>
+            <Grid item size={4}>
               <HomePageButton
                 variant="contained"
                 startIcon={<Icon icon="mdi:eye-outline" />}
+                component={NavLink}
+                to="/equipment/Sight"
               >
                 View Sight
               </HomePageButton>
             </Grid>
 
-            <Grid item size={8}>
+            <Grid item size={4}>
               <HomePageButton
                 variant="contained"
                 startIcon={<Icon icon="memory:bow" />}
+                component={NavLink}
+                to="/equipment/Bow"
               >
                 View Bow
               </HomePageButton>
             </Grid>
-            <Grid item size={8}>
+            <Grid item size={4}>
               <HomePageButton
                 variant="contained"
                 startIcon={<Icon icon="teenyicons:arrow-solid" />}
+                component={NavLink}
+                to="/equipment/Arrow"
               >
                 View Arrow
               </HomePageButton>
