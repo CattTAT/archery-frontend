@@ -26,6 +26,14 @@ const Header = ({ page, isRegistration, isUserProfile }) => {
         justifyContent="space-between"
         alignItems="center"
         marginBottom={1}
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          bgcolor: "background.default",
+          mx: -1,
+          width: "calc(100% + 16px)",
+        }}
       >
         <Fab
           color="primary"
