@@ -34,11 +34,6 @@ const EquipmentDetail = () => {
     }
   }, [params.id]);
 
-  useEffect(() => {
-    console.log(id);
-  }
-  , [id]);
-
   const headerTitle = id ? "Edit Equipment" : "New Equipment";
 
   return (
