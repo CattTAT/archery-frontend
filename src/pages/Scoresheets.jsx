@@ -77,7 +77,7 @@ const ScoresheetCardStyled = styled(Card)(({ theme }) => ({
   backgroundColor: "#D8D8D8",
 }));
 
-const ScoresheetCard = ({ name, status, date, distance, lastModified }) => {
+const ScoresheetCard = ({ id, name, status, date, distance, lastModified }) => {
   return (
     <ScoresheetCardStyled>
       <Grid2
@@ -138,6 +138,8 @@ const ScoresheetCard = ({ name, status, date, distance, lastModified }) => {
             <ControlButtons
               variant="contained"
               startIcon={<Icon icon="lets-icons:view" />}
+              component={NavLink}
+              to={`/scoresheet/${id}`}
             >
               View
             </ControlButtons>
@@ -145,6 +147,8 @@ const ScoresheetCard = ({ name, status, date, distance, lastModified }) => {
             <ControlButtons
               variant="contained"
               startIcon={<Icon icon="material-symbols:edit-outline" />}
+              component={NavLink}
+              to={`/scoresheet/${id}`}
             >
               Edit
             </ControlButtons>
@@ -233,6 +237,7 @@ const Scoresheets = () => {
         {scoresheets.map((scoresheet) => (
           <ScoresheetCard
             key={scoresheet.id}
+            id={scoresheet.id}
             name={scoresheet.name}
             status={scoresheet.status}
             date={scoresheet.date}

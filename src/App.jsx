@@ -10,6 +10,7 @@ import NewScoresheet from "./pages/NewScoresheet";
 import Statistics from "./pages/Statistics";
 import Equipment from "./pages/Equipment";
 import EquipmentDetail from "./pages/EquipmentDetail";
+import ScoresheetDetail from "./pages/ScoresheetDetail";
 
 function App() {
   return (
@@ -20,8 +21,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/scoresheets" element={<Scoresheets />} />
+            <Route path="/scoresheet-list" element={<Scoresheets />} />
             <Route path="/new-scoresheet" element={<NewScoresheet />} />
+            <Route path="/scoresheet/:id" element={<ScoresheetDetail />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/equipment/:type" element={<Equipment />} />
             <Route path="/new-equipment" element={<EquipmentDetail />} />

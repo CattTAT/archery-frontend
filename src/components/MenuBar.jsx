@@ -18,7 +18,7 @@ export function MenuBar() {
     {
       label: "Score",
       icon: <Icon icon="jam:write" style={{ fontSize: 32 }} />,
-      nav: "/scoresheets",
+      nav: "/scoresheet-list",
     },
     {
       label: "Stats",

@@ -66,7 +66,7 @@ const Home = () => {
                 variant="contained"
                 startIcon={<Icon icon="jam:write" />}
                 component={NavLink}
-                to="/scoresheets"
+                to="/scoresheet-list"
               >
                 View All Scoresheet
               </HomePageButton>
