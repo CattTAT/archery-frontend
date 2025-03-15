@@ -11,6 +11,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import Header from "../components/Header";
 
 const InformationForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -37,9 +38,9 @@ const Personal = ({ isRegistration }) => {
   return (
     <>
       {isRegistration ? (
-        <Typography variant="h2">Registration</Typography>
+        <Header page="Registration" isRegistration />
       ) : (
-        <Typography variant="h2">User Profile</Typography>
+        <Header page="User Profile" isUserProfile />
       )}
       <InformationForm square={false} elevation={3}>
         <Grid container direction="column" spacing={2} height="100%">
