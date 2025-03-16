@@ -2,12 +2,6 @@ import React, { forwardRef } from "react";
 import styled from "@emotion/styled";
 import { Button, Grid2, Stack, IconButton } from "@mui/material";
 import { getScoreColor } from "./ScoreTable";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Backspace,
-  KeyboardHide,
-} from "@mui/icons-material";
 import { Icon } from "@iconify/react";
 
 const ScoreKeyboard = forwardRef(({ visibility, targetFace }, ref) => {
@@ -21,7 +15,7 @@ const ScoreKeyboard = forwardRef(({ visibility, targetFace }, ref) => {
     display: "flex",
     visibility: visibility ? "visible" : "hidden",
     zIndex: 10,
-    height: "30%",
+    height: "25%",
     boxShadow: "0px -2px 5px 0px #D8D8D8",
     padding: "8px",
   }));
@@ -42,7 +36,7 @@ const ScoreKeyboard = forwardRef(({ visibility, targetFace }, ref) => {
     flexDirection: "column",
     backgroundColor: "#505050",
     width: "100%",
-    lineHeight: "1.5",
+    lineHeight: "1",
     margin: 0,
     "& .MuiButton-startIcon": {
       margin: 0,
@@ -53,7 +47,7 @@ const ScoreKeyboard = forwardRef(({ visibility, targetFace }, ref) => {
   }));
 
   return (
-    <Keyboard direction="row" className="score-keyboard" ref={ref}>
+    <Keyboard container direction="row" className="score-keyboard" ref={ref}>
       <Stack
         direction="row"
         flexWrap="wrap"
