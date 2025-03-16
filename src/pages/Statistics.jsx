@@ -4,7 +4,7 @@ import { MenuBar } from "../components/MenuBar";
 const Statistics = () => {
   return (
     <>
-      <Header page="Statistics" />
+      <Header page="Statistics" hideBackButton />
       <MenuBar />
     </>
   );

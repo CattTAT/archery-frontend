@@ -32,7 +32,7 @@ const Home = () => {
 
   return (
     <>
-      <Header page="Home" />
+      <Header page="Home" hideBackButton />
       <Grid
         container
         direction="column"

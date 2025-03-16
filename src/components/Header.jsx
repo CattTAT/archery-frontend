@@ -5,18 +5,12 @@ import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Fab from "@mui/material/Fab";
 
-const Header = ({ page, isRegistration, isUserProfile }) => {
+const Header = ({ page, hideBackButton, hidePersonalButton }) => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
     navigate(-1); // Navigate back to the previous page
   };
-
-  console.log(isRegistration, isUserProfile);
-
-  const backVisibility = isRegistration ? "hidden" : "visible";
-  const personalVisibility =
-    isUserProfile || isRegistration ? "hidden" : "visible";
 
   return (
     <>
@@ -33,6 +27,7 @@ const Header = ({ page, isRegistration, isUserProfile }) => {
           bgcolor: "background.default",
           mx: -1,
           width: "calc(100% + 16px)",
+          padding: "8px 0px",
         }}
       >
         <Fab
@@ -40,7 +35,10 @@ const Header = ({ page, isRegistration, isUserProfile }) => {
           aria-label="personal"
           size="large"
           onClick={handleBackClick}
-          sx={{ boxShadow: "none", visibility: backVisibility }}
+          sx={{
+            boxShadow: "none",
+            visibility: hideBackButton ? "hidden" : "visible",
+          }}
         >
           <Icon icon="nrk:back" style={{ fontSize: 36 }} />
         </Fab>
@@ -54,7 +52,10 @@ const Header = ({ page, isRegistration, isUserProfile }) => {
           size="large"
           component={NavLink}
           to="/personal"
-          sx={{ boxShadow: "none", visibility: personalVisibility }}
+          sx={{
+            boxShadow: "none",
+            visibility: hidePersonalButton ? "hidden" : "visible",
+          }}
         >
           <Icon
             icon="material-symbols:person-outline"

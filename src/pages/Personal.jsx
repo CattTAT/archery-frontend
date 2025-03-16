@@ -38,9 +38,9 @@ const Personal = ({ isRegistration }) => {
   return (
     <>
       {isRegistration ? (
-        <Header page="Registration" isRegistration />
+        <Header page="Registration" hideBackButton hidePersonalButton />
       ) : (
-        <Header page="User Profile" isUserProfile />
+        <Header page="User Profile" hidePersonalButton />
       )}
       <InformationForm square={false} elevation={3}>
         <Grid container direction="column" spacing={2} height="100%">

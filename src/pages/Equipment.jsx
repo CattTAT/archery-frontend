@@ -160,7 +160,7 @@ const Equipment = () => {
 
   return (
     <>
-      <Header page="Equipment" />
+      <Header page="Equipment" hideBackButton />
       <EquipmentListPaper square={false} elevation={3}>
         <Button
           variant="contained"

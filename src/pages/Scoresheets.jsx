@@ -177,7 +177,7 @@ const Scoresheets = () => {
 
   return (
     <>
-      <Header page="Scoresheets" />
+      <Header page="Scoresheets" hideBackButton />
       <ScoresheetListPaper square={false} elevation={3}>
         <Button
           variant="contained"
