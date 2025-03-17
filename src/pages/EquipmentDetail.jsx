@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useParams } from "react-router";
+import instance from "../lib/api";
 
 const EquipDetailForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -31,8 +32,16 @@ const EquipmentDetail = () => {
   useEffect(() => {
     if (params.id) {
       setId(params.id);
+      getEquipmentDetailsById(params.id);
     }
   }, [params.id]);
+
+  const getEquipmentDetailsById = async (id) => {
+    const data = await instance.get("/equipment/" + id);
+    setName(data.data.name);
+    setType(data.data.type);
+    setMeasurement(data.data.measurements);
+  };
 
   const headerTitle = id ? "Edit Equipment" : "New Equipment";
 
@@ -59,9 +68,9 @@ const EquipmentDetail = () => {
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
-          <MenuItem value={"Arrow"}>Arrow</MenuItem>
-          <MenuItem value={"Bow"}>Bow</MenuItem>
-          <MenuItem value={"Sight"}>Sight</MenuItem>
+          <MenuItem value={"arrows"}>Arrow</MenuItem>
+          <MenuItem value={"bow"}>Bow</MenuItem>
+          <MenuItem value={"sight"}>Sight</MenuItem>
         </Select>
         <Typography variant="h4">Measurement:</Typography>
         <TextField
