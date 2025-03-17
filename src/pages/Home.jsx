@@ -104,7 +104,7 @@ const Home = () => {
                 variant="contained"
                 startIcon={<Icon icon="mdi:eye-outline" />}
                 component={NavLink}
-                to="/equipment/Sight"
+                to="/equipment/sight"
               >
                 View Sight
               </HomePageButton>
@@ -115,7 +115,7 @@ const Home = () => {
                 variant="contained"
                 startIcon={<Icon icon="memory:bow" />}
                 component={NavLink}
-                to="/equipment/Bow"
+                to="/equipment/bow"
               >
                 View Bow
               </HomePageButton>
@@ -125,9 +125,9 @@ const Home = () => {
                 variant="contained"
                 startIcon={<Icon icon="teenyicons:arrow-solid" />}
                 component={NavLink}
-                to="/equipment/Arrow"
+                to="/equipment/arrows"
               >
-                View Arrow
+                View Arrows
               </HomePageButton>
             </Grid>
           </Grid>

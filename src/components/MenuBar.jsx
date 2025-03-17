@@ -28,7 +28,7 @@ export function MenuBar() {
     {
       label: "Tools",
       icon: <Icon icon="tabler:bow" style={{ fontSize: 32 }} />,
-      nav: "/equipment/All",
+      nav: "/equipment/all",
     },
   ];
 

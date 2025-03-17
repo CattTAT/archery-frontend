@@ -1,6 +1,5 @@
 import {
   Paper,
-  TextField,
   MenuItem,
   Card,
   Typography,
@@ -10,7 +9,6 @@ import {
   InputLabel,
   FormControl,
   OutlinedInput,
-  Box,
   Checkbox,
   ListItemText,
 } from "@mui/material";
@@ -22,6 +20,10 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
+import { useSnapshot } from "valtio";
+import instance from "../lib/api";
+import { store } from "../lib/store";
+import capitalize from "../lib/capitalize";
 
 const EquipmentListPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -44,22 +46,6 @@ const EquipmentCard = styled(Card)(({ theme }) => ({
   backgroundColor: "#E0E0E0",
 }));
 
-const EquipmentList = [
-  {
-    id: 0,
-    name: "Equipment 1",
-    type: "Arrow",
-    lastModified: "12/12/2024 18:45",
-  },
-  { id: 1, name: "Equipment 2", type: "Bow", lastModified: "12/12/2024 18:45" },
-  {
-    id: 2,
-    name: "Equipment 3",
-    type: "Sight",
-    lastModified: "12/12/2024 18:45",
-  },
-];
-
 const ControlButtons = styled(Button)(() => ({
   color: "black",
   borderRadius: "50px",
@@ -69,14 +55,14 @@ const ControlButtons = styled(Button)(() => ({
 const EquipmentCardList = ({ id, name, type, lastModified }) => {
   const [typeColor, setTypeColor] = React.useState("");
   useEffect(() => {
-    switch (type) {
-      case "Arrow":
+    switch (type.toLocaleLowerCase()) {
+      case "arrows":
         setTypeColor("#A3E6FF");
         break;
-      case "Bow":
+      case "bow":
         setTypeColor("#FFA3A3");
         break;
-      case "Sight":
+      case "sight":
         setTypeColor("#ABABAB");
         break;
       default:
@@ -85,12 +71,12 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
   }, [type]);
 
   const TypeIcon = () => {
-    switch (type) {
-      case "Arrow":
+    switch (type.toLocaleLowerCase()) {
+      case "arrows":
         return <Icon icon="teenyicons:arrow-solid" />;
-      case "Bow":
+      case "bow":
         return <Icon icon="memory:bow" />;
-      case "Sight":
+      case "sight":
         return <Icon icon="mdi:eye-outline" />;
       default:
         return null;
@@ -101,7 +87,7 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
       <Stack direction="row" spacing={2} justifyContent="space-between">
         <Typography variant="h5">{name}</Typography>
         <Chip
-          label={type}
+          label={capitalize(type)}
           icon={<TypeIcon />}
           sx={{
             maxWidth: "100%",
@@ -135,11 +121,33 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
 };
 
 const Equipment = () => {
+  const userId = useSnapshot(store).userId;
+  const [EquipmentList, setEquipmentList] = React.useState([]);
   const [equipmentTypeFilter, setEquipmentTypeFilter] = React.useState([
-    "Arrow",
-    "Bow",
-    "Sight",
+    "arrows",
+    "bow",
+    "sight",
   ]);
+
+  useEffect(() => {
+    if (equipmentTypeFilter.length === 0) {
+      setEquipmentTypeFilter(["arrows", "bow", "sight"]);
+    }
+  }, [equipmentTypeFilter]);
+
+  const getUserEquipment = async () => {
+    const data = await instance.get("/equipment", {
+      params: {
+        archerId: userId,
+        type: equipmentTypeFilter,
+      },
+    });
+    setEquipmentList(data.data);
+  };
+
+  useEffect(() => {
+    getUserEquipment();
+  }, [equipmentTypeFilter]);
 
   let params = useParams();
   useEffect(() => {
@@ -185,18 +193,21 @@ const Equipment = () => {
             value={equipmentTypeFilter}
             onChange={handleChange}
             input={<OutlinedInput label="Equipment Type" />}
-            renderValue={(selected) => selected.sort().join(", ")}
+            renderValue={(selected) => {
+              selected = selected.map((type) => capitalize(type));
+              return selected.sort().join(", ");
+            }}
           >
-            <MenuItem value={"Arrow"}>
-              <Checkbox checked={equipmentTypeFilter.indexOf("Arrow") > -1} />
-              <ListItemText primary="Arrow" />
+            <MenuItem value={"arrows"}>
+              <Checkbox checked={equipmentTypeFilter.indexOf("arrows") > -1} />
+              <ListItemText primary="Arrows" />
             </MenuItem>
-            <MenuItem value={"Bow"}>
-              <Checkbox checked={equipmentTypeFilter.indexOf("Bow") > -1} />
+            <MenuItem value={"bow"}>
+              <Checkbox checked={equipmentTypeFilter.indexOf("bow") > -1} />
               <ListItemText primary="Bow" />
             </MenuItem>
-            <MenuItem value={"Sight"}>
-              <Checkbox checked={equipmentTypeFilter.indexOf("Sight") > -1} />
+            <MenuItem value={"sight"}>
+              <Checkbox checked={equipmentTypeFilter.indexOf("sight") > -1} />
               <ListItemText primary="Sight" />
             </MenuItem>
           </Select>
@@ -208,7 +219,7 @@ const Equipment = () => {
             id={equipment.id}
             name={equipment.name}
             type={equipment.type}
-            lastModified={equipment.lastModified}
+            lastModified={equipment.last_modified}
           />
         ))}
       </EquipmentListPaper>
