@@ -16,6 +16,87 @@ const ScoreTable = ({ round, sets, arrows, distance, targetFace }) => {
   const tableRef = useRef(null);
   const keyboardRef = useRef(null);
 
+  const onClickNextCell = () => {
+    const { row, col } = selectedCell;
+    if (scores[row][col] === null) return;
+    if (col < 2) {
+      setSelectedCell({ row, col: col + 1 });
+    } else if (row < totalRows - 1) {
+      setSelectedCell({ row: row + 1, col: 0 });
+    }
+  };
+
+  const onClickPreviousCell = () => {
+    const { row, col } = selectedCell;
+    if (col > 0) {
+      setSelectedCell({ row, col: col - 1 });
+    } else if (row > 0) {
+      setSelectedCell({ row: row - 1, col: 2 });
+    }
+  };
+
+  const sort = (tempScore, row) => {
+    const rowsPerRound = arrows / 3;
+    const currentRound = Math.floor(row / rowsPerRound);
+    const startRow = currentRound * rowsPerRound;
+    const endRow = startRow + rowsPerRound;
+    const scoreToSort = tempScore.slice(startRow, endRow);
+
+    // Flatten the 2D array
+    const flattenedArray = scoreToSort.flat();
+
+    // Sort the flattened array in descending order
+    const sortedArray = flattenedArray.sort((a, b) => {
+      const scoreValue = (score) => {
+        switch (score) {
+          case "X":
+            return 11;
+          case "M":
+            return 0;
+          case null:
+            return -1;
+          default:
+            return score;
+        }
+      };
+      return scoreValue(b) - scoreValue(a);
+    });
+
+    // Reshape the sorted array back into a 2D array
+    const sortedArray2D = [];
+    for (let i = 0; i < scoreToSort.length; i++) {
+      sortedArray2D.push(sortedArray.splice(0, scoreToSort[i].length));
+    }
+
+    // Replace the original scores with the sorted scores
+    for (let i = startRow; i < endRow; i++) {
+      for (let j = 0; j < 3; j++) {
+        tempScore[i][j] = sortedArray2D[i - startRow][j];
+      }
+    }
+
+    return tempScore;
+  };
+
+  const recordScore = (score) => {
+    setScores((prev) => {
+      const newScores = [...prev];
+      newScores[selectedCell.row][selectedCell.col] = score;
+      return sort(newScores, selectedCell.row);
+    });
+  };
+
+  const onClickBackspace = () => {
+    const { row, col } = selectedCell;
+    if (scores[row][col] !== null) {
+      recordScore(null);
+    } else if (col > 0) {
+      setSelectedCell({ row, col: col - 1 });
+    } else if (row > 0) {
+      setSelectedCell({ row: row - 1, col: 2 });
+    }
+  };
+
   const scoreTotal = scores
     .map((r) => r.reduce(addScore, 0))
     .reduce((a, b) => a + b, 0);
@@ -27,11 +108,26 @@ const ScoreTable = ({ round, sets, arrows, distance, targetFace }) => {
   };
 
   const handleCellClick = (row, col) => {
-    setSelectedCell({ row, col });
+    if (scores[row][col] !== null) {
+      setSelectedCell({ row, col });
+    } else {
+      let found = false;
+      // If no empty cell found in the current round, find the first empty cell in the nearest rounds
+      for (let r = 0; r < totalRows; r++) {
+        for (let c = 0; c < 3; c++) {
+          if (scores[r][c] === null) {
+            setSelectedCell({ row: r, col: c });
+            found = true;
+            break;
+          }
+        }
+        if (found) break;
+      }
+    }
   };
 
   const handleClickOutside = (event) => {
-    if (event.target.dataset.display) {
+    if (event.target.dataset.display === "true") {
       setSelectedCell(null);
     }
     if (
@@ -170,6 +266,11 @@ const ScoreTable = ({ round, sets, arrows, distance, targetFace }) => {
       <ScoreKeyboard
         visibility={selectedCell !== null}
         targetFace={targetFace}
+        onClickNextCell={onClickNextCell}
+        onClickPreviousCell={onClickPreviousCell}
+        setSelectedCell={setSelectedCell}
+        recordScore={recordScore}
+        onClickBackspace={onClickBackspace}
         ref={keyboardRef}
       />
     </Stack>
