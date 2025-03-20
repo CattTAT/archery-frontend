@@ -12,6 +12,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Header from "../components/Header";
+import { useSnapshot } from "valtio";
+import instance from "../lib/api";
+import { store } from "../lib/store";
 
 const InformationForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -29,11 +32,31 @@ const ToggleButtonGroupStyled = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 const Personal = ({ isRegistration }) => {
+  const userId = useSnapshot(store).userId;
+
   const [name, setName] = React.useState("");
   const [gender, setGender] = React.useState("Male");
   const [eyeSight, setEyeSight] = React.useState("Left");
   const [bowType, setBowType] = React.useState("Recurve");
   const [level, setLevel] = React.useState("Novice");
+  const [archer, setArcher] = React.useState({});
+
+  const getUserProfile = async () => {
+    const response = await instance.get("/archers/" + userId);
+    const { data } = response;
+    setArcher(data);
+    setName(data.name);
+    setGender(data.gender);
+    setBowType(data.bow);
+    setLevel(data.level);
+    setEyeSight(data.eye);
+  };
+
+  useEffect(() => {
+    if (!isRegistration) {
+      getUserProfile();
+    }
+  }, []);
 
   return (
     <>
@@ -64,8 +87,8 @@ const Personal = ({ isRegistration }) => {
               onChange={(e) => setGender(e.target.value)}
               aria-label="gender"
             >
-              <ToggleButton value="Male">Male</ToggleButton>
-              <ToggleButton value="Female">Female</ToggleButton>
+              <ToggleButton value="male">Male</ToggleButton>
+              <ToggleButton value="female">Female</ToggleButton>
             </ToggleButtonGroupStyled>
           </Grid>
           <Grid container direction="row" spacing={2}>
@@ -77,8 +100,8 @@ const Personal = ({ isRegistration }) => {
               onChange={(e) => setEyeSight(e.target.value)}
               aria-label="eyeSight"
             >
-              <ToggleButton value="Left">Left</ToggleButton>
-              <ToggleButton value="Right">Right</ToggleButton>
+              <ToggleButton value="left">Left</ToggleButton>
+              <ToggleButton value="right">Right</ToggleButton>
             </ToggleButtonGroupStyled>
           </Grid>
           <Grid container direction="row" spacing={2}>
@@ -90,8 +113,8 @@ const Personal = ({ isRegistration }) => {
               onChange={(e) => setBowType(e.target.value)}
               aria-label="bowType"
             >
-              <ToggleButton value="Recurve">Recurve</ToggleButton>
-              <ToggleButton value="Compound">Compound</ToggleButton>
+              <ToggleButton value="recurve">Recurve</ToggleButton>
+              <ToggleButton value="compound">Compound</ToggleButton>
             </ToggleButtonGroupStyled>
           </Grid>
           <Grid container direction="row" spacing={2}>
@@ -104,10 +127,10 @@ const Personal = ({ isRegistration }) => {
               value={level}
               onChange={(e) => setLevel(e.target.value)}
             >
-              <MenuItem value={"Novice"}>Novice</MenuItem>
-              <MenuItem value={"Elementary"}>Elementary</MenuItem>
-              <MenuItem value={"Intermediate"}>Intermediate</MenuItem>
-              <MenuItem value={"Advance"}>Advance</MenuItem>
+              <MenuItem value={"novice"}>Novice</MenuItem>
+              <MenuItem value={"elementary"}>Elementary</MenuItem>
+              <MenuItem value={"intermediate"}>Intermediate</MenuItem>
+              <MenuItem value={"advance"}>Advance</MenuItem>
             </Select>
           </Grid>
 
