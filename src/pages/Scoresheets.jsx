@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
 import {
@@ -21,6 +21,10 @@ import {
 import styled from "@mui/material/styles/styled";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
+import { useSnapshot } from "valtio";
+import instance from "../lib/api";
+import { store } from "../lib/store";
+import { use } from "react";
 
 const ScoresheetListPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -39,26 +43,6 @@ const ScoresheetsFilter = styled(TextField)(({ theme }) => ({
   },
   width: "50%",
 }));
-
-const scoresheetsDistances = ["18M", "25M", "30M", "50M", "70M", "90M"];
-const scoresheets = [
-  {
-    id: 0,
-    name: "Scoresheet 1",
-    status: 0,
-    date: "2021-10-10",
-    distance: "18M",
-    lastModified: "12/12/2024 18:45",
-  },
-  {
-    id: 1,
-    name: "Scoresheet 2",
-    status: 1,
-    date: "2021-10-10",
-    distance: "18M",
-    lastModified: "12/12/2024 18:45",
-  },
-];
 
 const ControlButtons = styled(Button)(({ theme }) => ({
   color: "black",
@@ -160,10 +144,49 @@ const ScoresheetCard = ({ id, name, status, date, distance, lastModified }) => {
 };
 
 const Scoresheets = () => {
-  const [dateFilter, setDateFilter] = React.useState("All Time");
+  const userId = useSnapshot(store).userId;
+  const [scoresheetsList, setScoresheetsList] = React.useState([]);
+  const [scoresheetsDistances, setScoresheetsDistances] = React.useState([]);
+  const [statusFilter, setStatusFilter] = React.useState([0, 1]);
   const [distanceFilter, setDistanceFilter] = React.useState([
     ...scoresheetsDistances,
   ]);
+
+  const getScoresheetsDistances = async () => {
+    const data = await instance.get("/scoresheets/distances", {
+      params: {
+        archerId: userId,
+      },
+    });
+    setScoresheetsDistances(
+      data.data.map((distance) => distance.distance + "M")
+    );
+  };
+
+  const getScoresheets = async () => {
+    const data = await instance.get("/scoresheets", {
+      params: {
+        archerId: userId,
+        distance: distanceFilter.map((distance) => distance.replace("M", "")),
+        status: statusFilter,
+      },
+    });
+    setScoresheetsList(data.data);
+  };
+
+  useEffect(() => {
+    getScoresheetsDistances();
+  }, []);
+
+  useEffect(() => {
+    getScoresheets();
+  }, [statusFilter, distanceFilter]);
+
+  useEffect(() => {
+    if (distanceFilter.length === 0) {
+      setDistanceFilter([...scoresheetsDistances]);
+    }
+  }, [distanceFilter]);
 
   const handleDistanceChange = (event) => {
     const {
@@ -172,6 +195,16 @@ const Scoresheets = () => {
     setDistanceFilter(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const handleStatusChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setStatusFilter(
+      // On autofill we get a stringified value.
+      typeof value === "number" ? value.split(",") : value
     );
   };
 
@@ -193,21 +226,41 @@ const Scoresheets = () => {
         >
           New Scoresheet
         </Button>
-        <Stack direction="row" spacing={2}>
-          <ScoresheetsFilter
-            select
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            label="Date Modified"
-          >
-            <MenuItem value={"This Week"}>This Week</MenuItem>
-            <MenuItem value={"This Month"}>This Month</MenuItem>
-            <MenuItem value={"Last 3 Months"}>Last 3 Months</MenuItem>
-            <MenuItem value={"This Year"}>This Year</MenuItem>
-            <MenuItem value={"All Time"}>All Time</MenuItem>
-          </ScoresheetsFilter>
+        <Stack direction="column" spacing={2}>
+          <FormControl sx={{ m: 1, width: 1 }}>
+            <InputLabel
+              id="multiple-checkbox-label"
+              sx={{ fontSize: 20, color: "primary.main" }}
+            >
+              Status
+            </InputLabel>
+            <Select
+              labelId="multiple-checkbox-label"
+              id="multiple-checkbox"
+              multiple
+              value={statusFilter}
+              onChange={handleStatusChange}
+              input={<OutlinedInput label="Status" />}
+              renderValue={(selected) =>
+                selected
+                  .sort()
+                  .map((status) => (status === 0 ? "In Progress" : "Completed"))
+                  .join(", ")
+              }
+              autoFocus
+            >
+              <MenuItem key={0} value={0}>
+                <Checkbox checked={statusFilter.indexOf(0) > -1} />
+                <ListItemText primary="In Progress" />
+              </MenuItem>
+              <MenuItem key={1} value={1}>
+                <Checkbox checked={statusFilter.indexOf(1) > -1} />
+                <ListItemText primary="Completed" />
+              </MenuItem>
+            </Select>
+          </FormControl>
 
-          <FormControl sx={{ m: 1, width: 300 }}>
+          <FormControl sx={{ m: 1, width: 1 }}>
             <InputLabel
               id="multiple-checkbox-label"
               sx={{ fontSize: 20, color: "primary.main" }}
@@ -234,15 +287,15 @@ const Scoresheets = () => {
           </FormControl>
         </Stack>
         {/* filter implement in backend */}
-        {scoresheets.map((scoresheet) => (
+        {scoresheetsList.map((scoresheet) => (
           <ScoresheetCard
             key={scoresheet.id}
             id={scoresheet.id}
             name={scoresheet.name}
             status={scoresheet.status}
-            date={scoresheet.date}
-            distance={scoresheet.distance}
-            lastModified={scoresheet.lastModified}
+            date={scoresheet.created_at}
+            distance={scoresheet.distance + "M"}
+            lastModified={scoresheet.last_modified}
           />
         ))}
       </ScoresheetListPaper>
