@@ -2,7 +2,14 @@ import { GlobalStyles, Stack } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import ScoreKeyboard from "./ScoreKeyboard";
 
-const ScoreTable = ({ round, sets, arrows, distance, targetFace }) => {
+const ScoreTable = ({
+  round,
+  sets,
+  arrows,
+  distance,
+  targetFace,
+  lastModified,
+}) => {
   const totalRows = Math.ceil(arrows / 3) * sets;
 
   const testScores = Array(totalRows)
@@ -262,7 +269,7 @@ const ScoreTable = ({ round, sets, arrows, distance, targetFace }) => {
           </tr>
         </tbody>
       </table>
-      <span style={{ fontSize: 12 }}>Last Modified: </span>
+      <span style={{ fontSize: 12 }}>Last Modified: {lastModified} </span>
       <ScoreKeyboard
         visibility={selectedCell !== null}
         targetFace={targetFace}

@@ -24,7 +24,6 @@ import { NavLink } from "react-router";
 import { useSnapshot } from "valtio";
 import instance from "../lib/api";
 import { store } from "../lib/store";
-import { use } from "react";
 
 const ScoresheetListPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),

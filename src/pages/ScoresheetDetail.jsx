@@ -22,6 +22,7 @@ import ScoreTable from "../components/ScoreTable";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
+import instance from "../lib/api";
 
 const ScoresheetDetailPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -64,26 +65,34 @@ CustomTabPanel.propTypes = {
 };
 
 function ScoresheetDetail() {
-  const [id, setId] = React.useState(null);
-  const [status, setStatus] = React.useState("");
   const [currentTab, setCurrentTab] = React.useState(0);
-  const [round, setRound] = React.useState(2);
   const [currentRound, setCurrentRound] = React.useState(2);
-  const [sets, setSets] = React.useState(6);
-  const [arrows, setArrows] = React.useState(6);
-  const [distance, setDistance] = React.useState("18M");
-  const [targetFace, setTargetFace] = React.useState("80cm 6 Rings");
+  const [scoresheet, setScoresheet] = React.useState(null);
 
   const handleCurrentTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
 
+  const getScoresheetDetail = async (id) => {
+    try {
+      const response = await instance.get(`/scoresheets/${id}`);
+      const data = response.data;
+      setScoresheet(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   let params = useParams();
   useEffect(() => {
     if (params.id) {
-      setId(params.id);
+      getScoresheetDetail(params.id);
     }
   }, [params.id]);
+
+  useEffect(() => {
+    console.log(scoresheet);
+  }, [scoresheet]);
 
   return (
     <>
@@ -98,44 +107,57 @@ function ScoresheetDetail() {
             id="panel1-header"
           >
             <Typography variant="h5" component="span">
-              <Icon icon="lets-icons:notebook" /> Scoresheet name
+              <Icon icon="lets-icons:notebook" /> {scoresheet?.name}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <List dense>
               <ListItem>
-                <ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 1 / 10 }}>
                   <Icon icon="icon-park-outline:archery" />
                 </ListItemIcon>
-                <ListItemText primary={"Rounds: " + round} />
+                <ListItemText primary={"Rounds: " + scoresheet?.round} />
               </ListItem>
               <ListItem>
-                <ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 1 / 10 }}>
                   <Icon icon="icon-park-outline:archery" />
                 </ListItemIcon>
 
-                <ListItemText primary={"Sets per round: " + sets} />
+                <ListItemText primary={"Sets per round: " + scoresheet?.set} />
               </ListItem>
               <ListItem>
-                <ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 1 / 10 }}>
                   <Icon icon="tabler:archery-arrow" />
                 </ListItemIcon>
 
-                <ListItemText primary={"Arrows per set: " + arrows} />
+                <ListItemText
+                  primary={"Arrows per set: " + scoresheet?.arrow_per_set}
+                />
               </ListItem>
               <ListItem>
-                <ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 1 / 10 }}>
                   <Icon icon="material-symbols-light:distance-rounded" />
                 </ListItemIcon>
 
-                <ListItemText primary={"Distance: " + distance} />
+                <ListItemText primary={"Distance: " + scoresheet?.distance} />
               </ListItem>
               <ListItem>
-                <ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 1 / 10 }}>
                   <Icon icon="game-icons:archery-target" />
                 </ListItemIcon>
 
-                <ListItemText primary={"Target face: " + targetFace} />
+                <ListItemText
+                  primary={"Target face: " + scoresheet?.target_face}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon sx={{ minWidth: 1 / 10 }}>
+                  <Icon icon="clarity:date-line" />
+                </ListItemIcon>
+
+                <ListItemText
+                  primary={"Create at: " + scoresheet?.created_at}
+                />
               </ListItem>
             </List>
           </AccordionDetails>
@@ -161,7 +183,7 @@ function ScoresheetDetail() {
             onChange={handleCurrentTabChange}
             aria-label="round tabs"
           >
-            {Array(round)
+            {Array(scoresheet?.round || 0)
               .fill()
               .map((_, i) => (
                 <Tab
@@ -173,16 +195,17 @@ function ScoresheetDetail() {
               ))}
           </Tabs>
         </Box>
-        {Array(round)
+        {Array(scoresheet?.round || 0)
           .fill()
           .map((_, i) => (
             <CustomTabPanel key={i} value={currentTab} index={i}>
               <ScoreTable
                 round={i + 1}
-                sets={sets}
-                arrows={arrows}
-                distance={distance}
-                targetFace={targetFace}
+                sets={scoresheet?.set}
+                arrows={scoresheet?.arrow_per_set}
+                distance={scoresheet?.distance}
+                targetFace={scoresheet?.target_face}
+                lastModified={scoresheet?.last_modified}
               />
             </CustomTabPanel>
           ))}

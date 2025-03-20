@@ -23,7 +23,7 @@ const Header = ({ page, hideBackButton, hidePersonalButton }) => {
         sx={{
           position: "sticky",
           top: 0,
-          zIndex: 1,
+          zIndex: 10,
           bgcolor: "background.default",
           mx: -1,
           width: "calc(100% + 16px)",
