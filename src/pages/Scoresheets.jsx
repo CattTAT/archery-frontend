@@ -246,7 +246,6 @@ const Scoresheets = () => {
                   .map((status) => (status === 0 ? "In Progress" : "Completed"))
                   .join(", ")
               }
-              autoFocus
             >
               <MenuItem key={0} value={0}>
                 <Checkbox checked={statusFilter.indexOf(0) > -1} />
@@ -274,7 +273,6 @@ const Scoresheets = () => {
               onChange={handleDistanceChange}
               input={<OutlinedInput label="Distance" />}
               renderValue={(selected) => selected.sort().join(", ")}
-              autoFocus
             >
               {scoresheetsDistances.map((distance) => (
                 <MenuItem key={distance} value={distance}>

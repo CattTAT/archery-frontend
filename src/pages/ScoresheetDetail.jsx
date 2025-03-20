@@ -90,10 +90,6 @@ function ScoresheetDetail() {
     }
   }, [params.id]);
 
-  useEffect(() => {
-    console.log(scoresheet);
-  }, [scoresheet]);
-
   return (
     <>
       <Header page="Scoresheet" />
@@ -200,6 +196,7 @@ function ScoresheetDetail() {
           .map((_, i) => (
             <CustomTabPanel key={i} value={currentTab} index={i}>
               <ScoreTable
+                scoresheetId={scoresheet?.id}
                 round={i + 1}
                 sets={scoresheet?.set}
                 arrows={scoresheet?.arrow_per_set}

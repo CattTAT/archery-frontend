@@ -1,8 +1,10 @@
 import { GlobalStyles, Stack } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import ScoreKeyboard from "./ScoreKeyboard";
+import instance from "../lib/api";
 
 const ScoreTable = ({
+  scoresheetId,
   round,
   sets,
   arrows,
@@ -12,16 +14,91 @@ const ScoreTable = ({
 }) => {
   const totalRows = Math.ceil(arrows / 3) * sets;
 
-  const testScores = Array(totalRows)
+  const scoreTemplates = Array(totalRows)
     .fill()
     .map(() => {
       return Array(3).fill(null);
     });
 
-  const [scores, setScores] = useState(testScores);
+  const [scoresetId, setScoresetId] = useState(null);
+  const [scores, setScores] = useState(scoreTemplates);
+  const [arrowDetails, setArrowDetails] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
   const tableRef = useRef(null);
   const keyboardRef = useRef(null);
+
+  const getScoresetId = async (scoresheetId, round) => {
+    const data = await instance.get("/scoreset", {
+      params: {
+        scoresheetId: scoresheetId,
+        roundSeq: round,
+      },
+    });
+    setScoresetId(data.data.map((scoreset) => scoreset.id));
+  };
+
+  const getArrowDetails = async (scoresetId) => {
+    const data = await instance.get("/arrows", {
+      params: {
+        scoresetId: scoresetId,
+      },
+    });
+
+    // Ensure the latest result of duplicates is kept
+    setArrowDetails((prevScoreDB) => {
+      const updatedScoreDB = [...prevScoreDB];
+      const newScores = data.data;
+
+      newScores.forEach((newScore) => {
+        const existingIndex = updatedScoreDB.findIndex(
+          (score) => score.id === newScore.id // Assuming `id` is the unique identifier
+        );
+
+        if (existingIndex !== -1) {
+          // Replace the existing entry with the latest one
+          updatedScoreDB[existingIndex] = newScore;
+        } else {
+          // Add the new entry if it doesn't exist
+          updatedScoreDB.push(newScore);
+        }
+      });
+
+      return updatedScoreDB;
+    });
+  };
+
+  useEffect(() => {
+    if (!scoresheetId || !round) return;
+    getScoresetId(scoresheetId, round);
+  }, [scoresheetId, round]);
+
+  useEffect(() => {
+    if (!scoresetId || scoresetId.length === 0) return;
+    scoresetId.forEach((id) => getArrowDetails(id));
+  }, [scoresetId]);
+
+  useEffect(() => {
+    let arrowNumber = 0;
+    let tempScore = scores;
+    if (arrowDetails.length === 0) return;
+    for (let i = 0; i < scores.length; i++) {
+      for (let j = 0; j < scores[i].length; j++) {
+        switch (arrowDetails[arrowNumber]?.score) {
+          case "X":
+          case "M":
+          case null:
+            tempScore[i][j] = arrowDetails[arrowNumber]?.score;
+            break;
+          default:
+            tempScore[i][j] =
+              parseInt(arrowDetails[arrowNumber]?.score, 10) || null;
+            break;
+        }
+        arrowNumber++;
+      }
+    }
+    setScores(tempScore);
+  }, [arrowDetails]);
 
   const onClickNextCell = () => {
     const { row, col } = selectedCell;
