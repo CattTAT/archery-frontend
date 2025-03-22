@@ -179,13 +179,13 @@ const Scoresheets = () => {
 
   useEffect(() => {
     getScoresheets();
-  }, [statusFilter, distanceFilter]);
-
-  useEffect(() => {
     if (distanceFilter.length === 0) {
       setDistanceFilter([...scoresheetsDistances]);
     }
-  }, [distanceFilter]);
+    if (statusFilter.length === 0) {
+      setStatusFilter([0, 1]);
+    }
+  }, [distanceFilter, statusFilter]);
 
   const handleDistanceChange = (event) => {
     const {
