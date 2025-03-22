@@ -112,6 +112,7 @@ const Personal = ({ isRegistration }) => {
               exclusive
               onChange={(e) => setBowType(e.target.value)}
               aria-label="bowType"
+              disabled
             >
               <ToggleButton value="recurve">Recurve</ToggleButton>
               <ToggleButton value="compound">Compound</ToggleButton>
