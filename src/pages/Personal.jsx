@@ -35,10 +35,10 @@ const Personal = ({ isRegistration }) => {
   const userId = useSnapshot(store).userId;
 
   const [name, setName] = React.useState("");
-  const [gender, setGender] = React.useState("Male");
-  const [eyeSight, setEyeSight] = React.useState("Left");
-  const [bowType, setBowType] = React.useState("Recurve");
-  const [level, setLevel] = React.useState("Novice");
+  const [gender, setGender] = React.useState("male");
+  const [eyeSight, setEyeSight] = React.useState("left");
+  const [bowType, setBowType] = React.useState("recurve");
+  const [level, setLevel] = React.useState("novice");
   const [archer, setArcher] = React.useState({});
 
   const getUserProfile = async () => {
@@ -144,6 +144,18 @@ const Personal = ({ isRegistration }) => {
               fontSize: 20,
               lineHeight: 1,
               padding: "8px",
+            }}
+            onClick={async () => {
+              const body = {
+                name,
+                gender,
+                eye: eyeSight,
+                bow: bowType,
+                level,
+              };
+              isRegistration
+                ? await instance.post("archers", body)
+                : await instance.patch("archers/" + userId, body);
             }}
           >
             Save
