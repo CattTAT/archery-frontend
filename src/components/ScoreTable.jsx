@@ -249,7 +249,7 @@ const ScoreTable = ({
         <thead>
           <tr>
             <td data-display={true} colSpan={4}>
-              {distance} Round {round}
+              {distance}M Round {round}
             </td>
             <td data-display={true} style={{ fontSize: 12 }}>
               3 arrows subtotal

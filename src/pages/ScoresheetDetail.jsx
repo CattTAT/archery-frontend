@@ -135,7 +135,9 @@ function ScoresheetDetail() {
                   <Icon icon="material-symbols-light:distance-rounded" />
                 </ListItemIcon>
 
-                <ListItemText primary={"Distance: " + scoresheet?.distance} />
+                <ListItemText
+                  primary={"Distance: " + scoresheet?.distance + "M"}
+                />
               </ListItem>
               <ListItem>
                 <ListItemIcon sx={{ minWidth: 1 / 10 }}>
