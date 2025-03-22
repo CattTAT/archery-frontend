@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { MenuBar } from "../components/MenuBar";
 import Header from "../components/Header";
 import { ButtonGroup, Paper } from "@mui/material";
@@ -7,8 +8,15 @@ import styled from "@mui/material/styles/styled";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
+import { useSnapshot } from "valtio";
+import instance from "../lib/api";
+import { store } from "../lib/store";
 
 const Home = () => {
+  const userId = useSnapshot(store).userId;
+  const [mostRecentIncompleteScoresheet, setMostRecentIncompleteScoresheet] =
+    useState(null);
+
   const DashboardPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     ...theme.typography.body2,
@@ -29,6 +37,15 @@ const Home = () => {
     height: "100%",
     borderRadius: 10,
   }));
+
+  const retreiveMostRecentIncompleteScoresheet = async () => {
+    const response = await instance.get(`/scoresheets/recent/${userId}`);
+    setMostRecentIncompleteScoresheet(response.data.id);
+  };
+
+  useEffect(() => {
+    retreiveMostRecentIncompleteScoresheet();
+  }, []);
 
   return (
     <>
@@ -57,6 +74,8 @@ const Home = () => {
               <HomePageButton
                 variant="contained"
                 startIcon={<Icon icon="icon-park-outline:return" />}
+                component={NavLink}
+                to={"/scoresheet/" + mostRecentIncompleteScoresheet}
               >
                 Continue Scoresheet
               </HomePageButton>
