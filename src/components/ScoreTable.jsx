@@ -1,17 +1,18 @@
 import { GlobalStyles, Stack } from "@mui/material";
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import ScoreKeyboard from "./ScoreKeyboard";
 import instance from "../lib/api";
 
-const ScoreTable = ({
-  scoresheetId,
-  round,
-  sets,
-  arrows,
-  distance,
-  targetFace,
-  lastModified,
-}) => {
+const ScoreTable = (
+  { scoresheetId, round, sets, arrows, distance, targetFace, lastModified },
+  ref
+) => {
   const totalRows = Math.ceil(arrows / 3) * sets;
 
   const scoreTemplates = Array(totalRows)
@@ -78,26 +79,28 @@ const ScoreTable = ({
   }, [scoresetId]);
 
   useEffect(() => {
-    let arrowNumber = 0;
-    let tempScore = scores;
     if (arrowDetails.length === 0) return;
-    for (let i = 0; i < scores.length; i++) {
-      for (let j = 0; j < scores[i].length; j++) {
-        switch (arrowDetails[arrowNumber]?.score) {
-          case "X":
-          case "M":
-          case null:
-            tempScore[i][j] = arrowDetails[arrowNumber]?.score;
-            break;
-          default:
-            tempScore[i][j] =
-              parseInt(arrowDetails[arrowNumber]?.score, 10) || null;
-            break;
+    setScores((scores) => {
+      let arrowNumber = 0;
+      const tempScore = [...scores];
+      for (let i = 0; i < scores.length; i++) {
+        for (let j = 0; j < scores[i].length; j++) {
+          switch (arrowDetails[arrowNumber]?.score) {
+            case "X":
+            case "M":
+            case null:
+              tempScore[i][j] = arrowDetails[arrowNumber]?.score;
+              break;
+            default:
+              tempScore[i][j] =
+                parseInt(arrowDetails[arrowNumber]?.score, 10) || null;
+              break;
+          }
+          arrowNumber++;
         }
-        arrowNumber++;
       }
-    }
-    setScores(tempScore);
+      return tempScore;
+    });
   }, [arrowDetails]);
 
   const onClickNextCell = () => {
@@ -229,6 +232,14 @@ const ScoreTable = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      scores: scores,
+    }),
+    [scores]
+  );
 
   return (
     <Stack>
@@ -398,5 +409,5 @@ function getRealScore(score) {
   }
 }
 
-export default ScoreTable;
+export default forwardRef(ScoreTable);
 export { getScoreColor };
