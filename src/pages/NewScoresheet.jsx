@@ -14,7 +14,6 @@ import Switch from "@mui/material/Switch";
 import IconButton from "@mui/material/IconButton";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import ConfirmDialog from "../components/ConfirmDialog";
-
 import {
   Dialog,
   DialogActions,
@@ -23,6 +22,11 @@ import {
   DialogTitle,
 } from "@mui/material";
 import Button from "@mui/material/Button";
+import instance from "../lib/api";
+import { useSnapshot } from "valtio";
+import { store } from "../lib/store";
+import AlertSnackbar from "../components/AlertSnackbar";
+import { useNavigate } from "react-router";
 
 const NewScoresheetForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -99,6 +103,8 @@ TargetFaceInfoDialog.propTypes = {
 };
 
 const NewScoresheet = () => {
+  const navigate = useNavigate();
+  const userId = useSnapshot(store).userId;
   const [name, setName] = React.useState("");
   const [distance, setDistance] = React.useState("");
   const [targetFace, setTargetFace] = React.useState("");
@@ -107,15 +113,40 @@ const NewScoresheet = () => {
   const [arrows, setArrows] = React.useState("");
   const [arrowLocation, setArrowLocation] = React.useState(true);
   const [openTargetFaceInfo, setOpenTargeFaceInfo] = React.useState(false);
-
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+  const [openAlert, setOpenAlert] = React.useState(false);
 
-  const HandleConfirmDialog = () => {
+  const HandleConfirmDialog = async () => {
     setOpenConfirmDialog(false);
+    const body = {
+      archer_id: userId,
+      name: name,
+      distance: distance,
+      target_face: targetFace,
+      round: rounds,
+      set: sets,
+      arrow_per_set: arrows,
+    };
+    try {
+      const response = await instance.post("scoresheets", body);
+      const newScoresheetId = response.data.id; // Assuming the response contains the new scoresheet ID
+      setOpenAlert(true);
+
+      // Redirect to the scoresheet detail page
+      navigate(`/scoresheet/${newScoresheetId}`);
+    } catch (error) {
+      console.error("Failed to create scoresheet:", error);
+    }
   };
+
   return (
     <>
       <Header page="New Scoresheet" />
+      <AlertSnackbar
+        open={openAlert}
+        handleClose={() => setOpenAlert(false)}
+        message="Scoresheet created successfully"
+      />
       <NewScoresheetForm square={false} elevation={3}>
         <Typography variant="h5">Name:</Typography>
         <TextField
