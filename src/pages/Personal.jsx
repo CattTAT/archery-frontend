@@ -15,6 +15,7 @@ import Header from "../components/Header";
 import { useSnapshot } from "valtio";
 import instance from "../lib/api";
 import { store } from "../lib/store";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 const InformationForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -52,6 +53,16 @@ const Personal = ({ isRegistration }) => {
     setEyeSight(data.eye);
   };
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (!isRegistration) {
       getUserProfile();
@@ -65,6 +76,16 @@ const Personal = ({ isRegistration }) => {
       ) : (
         <Header page="User Profile" hidePersonalButton />
       )}
+      <AlertSnackbar
+        open={open}
+        handleClose={handleClose}
+        message={
+          isRegistration
+            ? "Archer successfully registered"
+            : "Archer details successfully updated"
+        }
+      />
+
       <InformationForm square={false} elevation={3}>
         <Grid container direction="column" spacing={2} height="100%">
           <Grid>
@@ -156,6 +177,7 @@ const Personal = ({ isRegistration }) => {
               isRegistration
                 ? await instance.post("archers", body)
                 : await instance.patch("archers/" + userId, body);
+              setOpen(true);
             }}
           >
             Save

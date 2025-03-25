@@ -11,6 +11,9 @@ import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useParams } from "react-router";
 import instance from "../lib/api";
+import { useSnapshot } from "valtio";
+import { store } from "../lib/store";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 const EquipDetailForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -23,10 +26,21 @@ const EquipDetailForm = styled(Paper)(({ theme }) => ({
 }));
 
 const EquipmentDetail = () => {
+  const userId = useSnapshot(store).userId;
   const [id, setId] = React.useState(null);
   const [name, setName] = React.useState("");
   const [type, setType] = React.useState("");
-  const [measurement, setMeasurement] = React.useState("");
+  const [measurements, setMeasurement] = React.useState("");
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   let params = useParams();
   useEffect(() => {
@@ -48,6 +62,15 @@ const EquipmentDetail = () => {
   return (
     <>
       <Header page={headerTitle} />
+      <AlertSnackbar
+        open={open}
+        handleClose={handleClose}
+        message={
+          id
+            ? "Equipment details successfully updated"
+            : "New equipment successfully created"
+        }
+      />
       <EquipDetailForm square={false} elevation={3}>
         <Typography variant="h4">Name:</Typography>
         <TextField
@@ -72,12 +95,12 @@ const EquipmentDetail = () => {
           <MenuItem value={"bow"}>Bow</MenuItem>
           <MenuItem value={"sight"}>Sight</MenuItem>
         </Select>
-        <Typography variant="h4">Measurement:</Typography>
+        <Typography variant="h4">Measurements:</Typography>
         <TextField
-          id="measurement"
+          id="measurements"
           type="text"
           variant="outlined"
-          value={measurement}
+          value={measurements}
           onChange={(e) => setMeasurement(e.target.value)}
           fullWidth
           multiline
@@ -92,6 +115,18 @@ const EquipmentDetail = () => {
             fontSize: 20,
             lineHeight: 1,
             padding: "8px",
+          }}
+          onClick={async () => {
+            const body = {
+              archer_id: userId,
+              name,
+              type,
+              measurements,
+            };
+            id
+              ? await instance.patch("equipment/" + id, body)
+              : await instance.post("equipment", body);
+            setOpen(true);
           }}
         >
           Save
