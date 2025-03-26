@@ -23,6 +23,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import instance from "../lib/api";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 const ScoresheetDetailPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -71,6 +72,8 @@ function ScoresheetDetail() {
   const [currentTab, setCurrentTab] = React.useState(0);
   const [currentRound, setCurrentRound] = React.useState(2);
   const [scoresheet, setScoresheet] = React.useState(null);
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [status, setStatus] = React.useState(0);
   const tableRefs = React.useRef([]);
 
   const handleCurrentTabChange = (event, newValue) => {
@@ -82,6 +85,7 @@ function ScoresheetDetail() {
       const response = await instance.get(`/scoresheets/${id}`);
       const data = response.data;
       setScoresheet(data);
+      setStatus(data.status);
     } catch (error) {
       console.error(error);
     }
@@ -97,6 +101,11 @@ function ScoresheetDetail() {
   return (
     <>
       <Header page="Scoresheet" />
+      <AlertSnackbar
+        open={openAlert}
+        handleClose={() => setOpenAlert(false)}
+        message={"Scores successfully updated"}
+      />
       <ScoresheetDetailPaper square={false} elevation={3}>
         <Accordion
           sx={{ backgroundColor: "lightgrey", marginBottom: "0px !important" }}
@@ -210,6 +219,7 @@ function ScoresheetDetail() {
                 distance={scoresheet?.distance}
                 targetFace={scoresheet?.target_face}
                 lastModified={scoresheet?.last_modified}
+                status={status}
               />
             </CustomTabPanel>
           ))}
@@ -223,9 +233,11 @@ function ScoresheetDetail() {
           </ControlButtons>
 
           <ControlButtons
+            disabled={status === 1 }
             variant="contained"
             startIcon={<Icon icon="material-symbols:save-outline" />}
-            onClick={() => {
+            onClick={async () => {
+              let status = 1;
               tableRefs.current.forEach((round) => {
                 const arrowId = round.arrowId;
                 const arrowLocations = round.arrowLocations;
@@ -236,9 +248,17 @@ function ScoresheetDetail() {
                     y_axis: arrowLocations[index][1],
                     score: scores[index],
                   };
+                  if (scores[index] === null) {
+                    status = 0;
+                  }
                   await instance.patch("arrows/" + id, body);
                 });
               });
+              await instance.patch("scoresheets/" + scoresheet.id, {
+                status,
+              });
+              setStatus(status);
+              setOpenAlert(true);
             }}
           >
             Save

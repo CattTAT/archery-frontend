@@ -10,7 +10,16 @@ import ScoreKeyboard from "./ScoreKeyboard";
 import instance from "../lib/api";
 
 const ScoreTable = (
-  { scoresheetId, round, sets, arrows, distance, targetFace, lastModified },
+  {
+    scoresheetId,
+    round,
+    sets,
+    arrows,
+    distance,
+    targetFace,
+    lastModified,
+    status,
+  },
   ref
 ) => {
   const totalRows = Math.ceil(arrows / 3) * sets;
@@ -202,6 +211,7 @@ const ScoreTable = (
   };
 
   const handleCellClick = (row, col) => {
+    if (status === 1) return;
     if (scores[row][col] !== null) {
       setSelectedCell({ row, col });
     } else {
