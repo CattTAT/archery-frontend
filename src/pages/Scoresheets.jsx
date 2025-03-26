@@ -21,9 +21,7 @@ import {
 import styled from "@mui/material/styles/styled";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
-import { useSnapshot } from "valtio";
 import instance from "../lib/api";
-import { store } from "../lib/store";
 
 const ScoresheetListPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -33,14 +31,6 @@ const ScoresheetListPaper = styled(Paper)(({ theme }) => ({
   flexDirection: "column",
   gap: theme.spacing(2),
   borderRadius: "10px",
-}));
-
-const ScoresheetsFilter = styled(TextField)(({ theme }) => ({
-  "& .MuiFormLabel-root": {
-    color: theme.palette.primary.main,
-    fontSize: 20,
-  },
-  width: "50%",
 }));
 
 const ControlButtons = styled(Button)(({ theme }) => ({
@@ -143,7 +133,7 @@ const ScoresheetCard = ({ id, name, status, date, distance, lastModified }) => {
 };
 
 const Scoresheets = () => {
-  const userId = useSnapshot(store).userId;
+  const userId = localStorage.getItem("userId");
   const [scoresheetsList, setScoresheetsList] = React.useState([]);
   const [scoresheetsDistances, setScoresheetsDistances] = React.useState([]);
   const [statusFilter, setStatusFilter] = React.useState([0, 1]);
@@ -179,7 +169,7 @@ const Scoresheets = () => {
 
   useEffect(() => {
     getScoresheets();
-    if (distanceFilter.length === 0) {
+    if (distanceFilter.length === 0 && scoresheetsDistances.length > 0) {
       setDistanceFilter([...scoresheetsDistances]);
     }
     if (statusFilter.length === 0) {

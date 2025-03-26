@@ -23,8 +23,6 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import instance from "../lib/api";
-import { useSnapshot } from "valtio";
-import { store } from "../lib/store";
 import AlertSnackbar from "../components/AlertSnackbar";
 import { useNavigate } from "react-router";
 
@@ -104,7 +102,7 @@ TargetFaceInfoDialog.propTypes = {
 
 const NewScoresheet = () => {
   const navigate = useNavigate();
-  const userId = useSnapshot(store).userId;
+  const userId = localStorage.getItem("userId");
   const [name, setName] = React.useState("");
   const [distance, setDistance] = React.useState("");
   const [targetFace, setTargetFace] = React.useState("");

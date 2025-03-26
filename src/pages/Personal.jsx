@@ -12,11 +12,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Header from "../components/Header";
-import { useSnapshot } from "valtio";
 import instance from "../lib/api";
-import { store } from "../lib/store";
 import AlertSnackbar from "../components/AlertSnackbar";
 import { useNavigate } from "react-router";
+import { v4 } from "uuid";
 
 const InformationForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -35,7 +34,7 @@ const ToggleButtonGroupStyled = styled(ToggleButtonGroup)(({ theme }) => ({
 
 const Personal = ({ isRegistration }) => {
   const navigate = useNavigate();
-  const userId = useSnapshot(store).userId;
+  const userId = localStorage.getItem("userId");
 
   const [name, setName] = React.useState("");
   const [gender, setGender] = React.useState("male");
@@ -177,8 +176,10 @@ const Personal = ({ isRegistration }) => {
                 level,
               };
               if (isRegistration) {
-                await instance.post("archers", body);
-                navigate("/home");
+                const newRegistration = await instance.post("archers", body);
+                localStorage.setItem("userId", newRegistration.data.id);
+                localStorage.setItem("deviceId", v4());
+                if (newRegistration.data.id) navigate("/home");
               } else {
                 await instance.patch("archers/" + userId, body);
               }

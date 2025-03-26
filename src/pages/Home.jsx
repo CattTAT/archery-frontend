@@ -8,12 +8,10 @@ import styled from "@mui/material/styles/styled";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
-import { useSnapshot } from "valtio";
 import instance from "../lib/api";
-import { store } from "../lib/store";
 
 const Home = () => {
-  const userId = useSnapshot(store).userId;
+  const userId = localStorage.getItem("userId");
   const [mostRecentIncompleteScoresheet, setMostRecentIncompleteScoresheet] =
     useState(null);
 
@@ -44,8 +42,9 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if (!userId) return;
     retreiveMostRecentIncompleteScoresheet();
-  }, []);
+  }, [userId]);
 
   return (
     <>
@@ -76,6 +75,7 @@ const Home = () => {
                 startIcon={<Icon icon="icon-park-outline:return" />}
                 component={NavLink}
                 to={"/scoresheet/" + mostRecentIncompleteScoresheet}
+                disabled={!mostRecentIncompleteScoresheet}
               >
                 Continue Scoresheet
               </HomePageButton>

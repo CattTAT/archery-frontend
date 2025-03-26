@@ -11,8 +11,6 @@ import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useParams } from "react-router";
 import instance from "../lib/api";
-import { useSnapshot } from "valtio";
-import { store } from "../lib/store";
 import AlertSnackbar from "../components/AlertSnackbar";
 import { useNavigate } from "react-router";
 
@@ -28,7 +26,7 @@ const EquipDetailForm = styled(Paper)(({ theme }) => ({
 
 const EquipmentDetail = () => {
   const navigate = useNavigate();
-  const userId = useSnapshot(store).userId;
+  const userId = localStorage.getItem("userId");
   const [id, setId] = React.useState(null);
   const [name, setName] = React.useState("");
   const [type, setType] = React.useState("");

@@ -20,9 +20,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
-import { useSnapshot } from "valtio";
 import instance from "../lib/api";
-import { store } from "../lib/store";
 import capitalize from "../lib/capitalize";
 
 const EquipmentListPaper = styled(Paper)(({ theme }) => ({
@@ -121,7 +119,7 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
 };
 
 const Equipment = () => {
-  const userId = useSnapshot(store).userId;
+  const userId = localStorage.getItem("userId");
   const [EquipmentList, setEquipmentList] = React.useState([]);
   const [equipmentTypeFilter, setEquipmentTypeFilter] = React.useState([
     "arrows",
