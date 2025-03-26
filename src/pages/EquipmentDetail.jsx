@@ -14,6 +14,7 @@ import instance from "../lib/api";
 import { useSnapshot } from "valtio";
 import { store } from "../lib/store";
 import AlertSnackbar from "../components/AlertSnackbar";
+import { useNavigate } from "react-router";
 
 const EquipDetailForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -26,6 +27,7 @@ const EquipDetailForm = styled(Paper)(({ theme }) => ({
 }));
 
 const EquipmentDetail = () => {
+  const navigate = useNavigate();
   const userId = useSnapshot(store).userId;
   const [id, setId] = React.useState(null);
   const [name, setName] = React.useState("");
@@ -123,9 +125,12 @@ const EquipmentDetail = () => {
               type,
               measurements,
             };
-            id
-              ? await instance.patch("equipment/" + id, body)
-              : await instance.post("equipment", body);
+            if (id) {
+              await instance.patch("equipment/" + id, body);
+            } else {
+              await instance.post("equipment", body);
+              navigate("/equipment/all");
+            }
             setOpen(true);
           }}
         >

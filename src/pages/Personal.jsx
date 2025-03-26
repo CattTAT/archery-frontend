@@ -16,6 +16,7 @@ import { useSnapshot } from "valtio";
 import instance from "../lib/api";
 import { store } from "../lib/store";
 import AlertSnackbar from "../components/AlertSnackbar";
+import { useNavigate } from "react-router";
 
 const InformationForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -33,6 +34,7 @@ const ToggleButtonGroupStyled = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 const Personal = ({ isRegistration }) => {
+  const navigate = useNavigate();
   const userId = useSnapshot(store).userId;
 
   const [name, setName] = React.useState("");
@@ -174,9 +176,12 @@ const Personal = ({ isRegistration }) => {
                 bow: bowType,
                 level,
               };
-              isRegistration
-                ? await instance.post("archers", body)
-                : await instance.patch("archers/" + userId, body);
+              if (isRegistration) {
+                await instance.post("archers", body);
+                navigate("/home");
+              } else {
+                await instance.patch("archers/" + userId, body);
+              }
               setOpen(true);
             }}
           >
