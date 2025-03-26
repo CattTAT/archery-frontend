@@ -133,12 +133,22 @@ const NewScoresheet = () => {
       const newScoresheetId = response.data.id; // Assuming the response contains the new scoresheet ID
       for (let i = 1; i <= rounds; i++) {
         for (let j = 1; j <= sets; j++) {
-          await instance.post("scoreset", {
+          const scoreset = await instance.post("scoreset", {
             archer_id: userId,
             scoresheet_id: newScoresheetId,
             round_seq: i,
             set_seq: j,
           });
+          for (let k = 1; k <= arrows; k++) {
+            await instance.post("arrows", {
+              scoreset_id: scoreset.data.id,
+              archer_id: userId,
+              arrow_seq: k,
+              score: null,
+              x_axis: null,
+              y_axis: null,
+            });
+          }
         }
       }
       setOpenAlert(true);

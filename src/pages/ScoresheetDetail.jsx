@@ -53,7 +53,10 @@ function CustomTabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
+      {/* {value === index && <Box sx={{ display: value === index ? "block" : "none", p: 1 }}>{children}</Box>} */}
+      <Box sx={{ display: value === index ? "block" : "none", p: 1 }}>
+        {children}
+      </Box>
     </div>
   );
 }
@@ -68,6 +71,7 @@ function ScoresheetDetail() {
   const [currentTab, setCurrentTab] = React.useState(0);
   const [currentRound, setCurrentRound] = React.useState(2);
   const [scoresheet, setScoresheet] = React.useState(null);
+  const tableRefs = React.useRef([]);
 
   const handleCurrentTabChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -198,6 +202,7 @@ function ScoresheetDetail() {
           .map((_, i) => (
             <CustomTabPanel key={i} value={currentTab} index={i}>
               <ScoreTable
+                ref={(ref) => (tableRefs.current[i] = ref)}
                 scoresheetId={scoresheet?.id}
                 round={i + 1}
                 sets={scoresheet?.set}
@@ -220,6 +225,21 @@ function ScoresheetDetail() {
           <ControlButtons
             variant="contained"
             startIcon={<Icon icon="material-symbols:save-outline" />}
+            onClick={() => {
+              tableRefs.current.forEach((round) => {
+                const arrowId = round.arrowId;
+                const arrowLocations = round.arrowLocations;
+                const scores = round.scores;
+                arrowId.forEach(async (id, index) => {
+                  const body = {
+                    x_axis: arrowLocations[index][0],
+                    y_axis: arrowLocations[index][1],
+                    score: scores[index],
+                  };
+                  await instance.patch("arrows/" + id, body);
+                });
+              });
+            }}
           >
             Save
           </ControlButtons>

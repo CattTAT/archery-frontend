@@ -21,8 +21,15 @@ const ScoreTable = (
       return Array(3).fill(null);
     });
 
+  const locationTemplates = Array(totalRows)
+    .fill()
+    .map(() => {
+      return Array(3).fill(Array(2).fill(null));
+    });
+
   const [scoresetId, setScoresetId] = useState(null);
   const [scores, setScores] = useState(scoreTemplates);
+  const [arrowLocations, setArrowLocations] = useState(locationTemplates);
   const [arrowDetails, setArrowDetails] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
   const tableRef = useRef(null);
@@ -236,7 +243,9 @@ const ScoreTable = (
   useImperativeHandle(
     ref,
     () => ({
-      scores: scores,
+      arrowId: arrowDetails.map((arrow) => arrow.id),
+      scores: scores.flat(2),
+      arrowLocations: arrowLocations.flat(1),
     }),
     [scores]
   );
