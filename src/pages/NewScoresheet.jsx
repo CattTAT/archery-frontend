@@ -118,7 +118,7 @@ const NewScoresheet = () => {
 
   const HandleConfirmDialog = async () => {
     setOpenConfirmDialog(false);
-    const body = {
+    const scoresheetsBody = {
       archer_id: userId,
       name: name,
       distance: distance,
@@ -127,9 +127,20 @@ const NewScoresheet = () => {
       set: sets,
       arrow_per_set: arrows,
     };
+
     try {
-      const response = await instance.post("scoresheets", body);
+      const response = await instance.post("scoresheets", scoresheetsBody);
       const newScoresheetId = response.data.id; // Assuming the response contains the new scoresheet ID
+      for (let i = 1; i <= rounds; i++) {
+        for (let j = 1; j <= sets; j++) {
+          await instance.post("scoreset", {
+            archer_id: userId,
+            scoresheet_id: newScoresheetId,
+            round_seq: i,
+            set_seq: j,
+          });
+        }
+      }
       setOpenAlert(true);
 
       // Redirect to the scoresheet detail page
