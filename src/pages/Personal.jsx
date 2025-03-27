@@ -168,17 +168,18 @@ const Personal = ({ isRegistration }) => {
               padding: "8px",
             }}
             onClick={async () => {
+              localStorage.setItem("deviceId", v4());
               const body = {
                 name,
                 gender,
                 eye: eyeSight,
                 bow: bowType,
                 level,
+                device_id: localStorage.getItem("deviceId"),
               };
               if (isRegistration) {
                 const newRegistration = await instance.post("archers", body);
                 localStorage.setItem("userId", newRegistration.data.id);
-                localStorage.setItem("deviceId", v4());
                 if (newRegistration.data.id) navigate("/home");
               } else {
                 await instance.patch("archers/" + userId, body);
