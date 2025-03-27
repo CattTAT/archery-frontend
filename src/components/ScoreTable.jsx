@@ -254,6 +254,7 @@ const ScoreTable = (
     ref,
     () => ({
       arrowId: arrowDetails.map((arrow) => arrow.id),
+      scoresetId: scoresetId,
       scores: scores.flat(2),
       arrowLocations: arrowLocations.flat(1),
     }),

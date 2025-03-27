@@ -22,6 +22,8 @@ import styled from "@mui/material/styles/styled";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
 import instance from "../lib/api";
+import AlertSnackbar from "../components/AlertSnackbar";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 const ScoresheetListPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -51,6 +53,7 @@ const ScoresheetCardStyled = styled(Card)(({ theme }) => ({
 }));
 
 const ScoresheetCard = ({ id, name, status, date, distance, lastModified }) => {
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
   return (
     <ScoresheetCardStyled>
       <Grid2
@@ -102,6 +105,7 @@ const ScoresheetCard = ({ id, name, status, date, distance, lastModified }) => {
             variant="contained"
             color="error"
             startIcon={<Icon icon="material-symbols:delete-outline" />}
+            onClick={() => setOpenConfirmDialog(true)}
           >
             Delete
           </ControlButtons>
@@ -128,6 +132,47 @@ const ScoresheetCard = ({ id, name, status, date, distance, lastModified }) => {
           )}
         </Grid2>
       </Grid2>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={() => setOpenConfirmDialog(false)}
+        onConfirm={async () => {
+          try {
+            const response = await instance.get("/scoreset/all", {
+              params: {
+                scoresheetId: id,
+              },
+            });
+
+            for (const scoreset of response.data) {
+              const arrows = await instance.get("/arrows", {
+                params: {
+                  scoresetId: scoreset.id,
+                },
+              });
+
+              for (const arrow of arrows.data) {
+                await instance.delete(`/arrows/${arrow.id}`);
+              }
+
+              await instance.delete(`/scoreset/${scoreset.id}`);
+            }
+
+            await instance.delete(`/scoresheets/${id}`);
+
+            localStorage.setItem(
+              "alertMessage",
+              "Scoresheet deleted successfully"
+            );
+            window.location.reload();
+          } catch (error) {
+            console.error("Error deleting scoresheet:", error);
+            localStorage.setItem("alertMessage", "Failed to delete scoresheet");
+            window.location.reload();
+          }
+        }}
+        title="Delete Scoresheet"
+        content="Are you sure you want to delete this scoresheet?"
+      />
     </ScoresheetCardStyled>
   );
 };
@@ -137,9 +182,7 @@ const Scoresheets = () => {
   const [scoresheetsList, setScoresheetsList] = React.useState([]);
   const [scoresheetsDistances, setScoresheetsDistances] = React.useState([]);
   const [statusFilter, setStatusFilter] = React.useState([0, 1]);
-  const [distanceFilter, setDistanceFilter] = React.useState([
-    ...scoresheetsDistances,
-  ]);
+  const [distanceFilter, setDistanceFilter] = React.useState([]);
 
   const getScoresheetsDistances = async () => {
     const data = await instance.get("/scoresheets/distances", {
@@ -147,9 +190,11 @@ const Scoresheets = () => {
         archerId: userId,
       },
     });
+    if (data.data.length === 0) return;
     setScoresheetsDistances(
       data.data.map((distance) => distance.distance + "M")
     );
+    setDistanceFilter(data.data.map((distance) => distance.distance + "M"));
   };
 
   const getScoresheets = async () => {
@@ -200,6 +245,7 @@ const Scoresheets = () => {
   return (
     <>
       <Header page="Scoresheets" hideBackButton />
+      <AlertSnackbar />
       <ScoresheetListPaper square={false} elevation={3}>
         <Button
           variant="contained"

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
 import { Paper, Box } from "@mui/material";
@@ -24,6 +24,7 @@ import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import instance from "../lib/api";
 import AlertSnackbar from "../components/AlertSnackbar";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 const ScoresheetDetailPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -69,12 +70,13 @@ CustomTabPanel.propTypes = {
 };
 
 function ScoresheetDetail() {
+  const navigate = useNavigate();
   const [currentTab, setCurrentTab] = React.useState(0);
   const [currentRound, setCurrentRound] = React.useState(2);
   const [scoresheet, setScoresheet] = React.useState(null);
-  const [openAlert, setOpenAlert] = React.useState(false);
   const [status, setStatus] = React.useState(0);
   const tableRefs = React.useRef([]);
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
 
   const handleCurrentTabChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -101,11 +103,7 @@ function ScoresheetDetail() {
   return (
     <>
       <Header page="Scoresheet" />
-      <AlertSnackbar
-        open={openAlert}
-        handleClose={() => setOpenAlert(false)}
-        message={"Scores successfully updated"}
-      />
+      <AlertSnackbar />
       <ScoresheetDetailPaper square={false} elevation={3}>
         <Accordion
           sx={{ backgroundColor: "lightgrey", marginBottom: "0px !important" }}
@@ -228,12 +226,14 @@ function ScoresheetDetail() {
           <ControlButtons
             variant="contained"
             startIcon={<Icon icon="material-symbols:delete-outline" />}
+            color="error"
+            onClick={() => setOpenConfirmDialog(true)}
           >
             Delete
           </ControlButtons>
 
           <ControlButtons
-            disabled={status === 1 }
+            disabled={status === 1}
             variant="contained"
             startIcon={<Icon icon="material-symbols:save-outline" />}
             onClick={async () => {
@@ -258,13 +258,42 @@ function ScoresheetDetail() {
                 status,
               });
               setStatus(status);
-              setOpenAlert(true);
+              localStorage.setItem(
+                "alertMessage",
+                "Scores updated successfully"
+              );
+              window.location.reload();
             }}
           >
             Save
           </ControlButtons>
         </Stack>
       </ScoresheetDetailPaper>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={() => setOpenConfirmDialog(false)}
+        onConfirm={async () => {
+          await instance.delete("scoresheets/" + scoresheet.id);
+          tableRefs.current.forEach((round) => {
+            const arrowId = round.arrowId;
+            const scoresetId = round.scoresetId;
+            scoresetId.forEach(async (id) => {
+              await instance.delete("scoreset/" + id);
+            });
+            arrowId.forEach(async (id) => {
+              await instance.delete("arrows/" + id);
+            });
+          });
+
+          localStorage.setItem(
+            "alertMessage",
+            "Scoresheet deleted successfully"
+          );
+          navigate("/scoresheet-list");
+        }}
+        title="Confirm delete this scoresheet?"
+        content="Please note that all the recorded arrows will also be deleted"
+      />
       <MenuBar />
     </>
   );
