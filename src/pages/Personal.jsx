@@ -54,16 +54,6 @@ const Personal = ({ isRegistration }) => {
     setEyeSight(data.eye);
   };
 
-  const [open, setOpen] = React.useState(false);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   useEffect(() => {
     if (!isRegistration) {
       getUserProfile();
@@ -77,15 +67,7 @@ const Personal = ({ isRegistration }) => {
       ) : (
         <Header page="User Profile" hidePersonalButton />
       )}
-      <AlertSnackbar
-        open={open}
-        handleClose={handleClose}
-        message={
-          isRegistration
-            ? "Archer successfully registered"
-            : "Archer details successfully updated"
-        }
-      />
+      <AlertSnackbar />
 
       <InformationForm square={false} elevation={3}>
         <Grid container direction="column" spacing={2} height="100%">
@@ -180,11 +162,19 @@ const Personal = ({ isRegistration }) => {
               if (isRegistration) {
                 const newRegistration = await instance.post("archers", body);
                 localStorage.setItem("userId", newRegistration.data.id);
+                localStorage.setItem(
+                  "alertMessage",
+                  "Archer profile created successfully"
+                );
                 if (newRegistration.data.id) navigate("/home");
               } else {
                 await instance.patch("archers/" + userId, body);
+                localStorage.setItem(
+                  "alertMessage",
+                  "Archer profile updated successfully"
+                );
+                window.location.reload();
               }
-              setOpen(true);
             }}
           >
             Save

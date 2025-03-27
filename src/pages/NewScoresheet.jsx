@@ -112,7 +112,6 @@ const NewScoresheet = () => {
   const [arrowLocation, setArrowLocation] = React.useState(true);
   const [openTargetFaceInfo, setOpenTargeFaceInfo] = React.useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
-  const [openAlert, setOpenAlert] = React.useState(false);
 
   const HandleConfirmDialog = async () => {
     setOpenConfirmDialog(false);
@@ -149,9 +148,7 @@ const NewScoresheet = () => {
           }
         }
       }
-      setOpenAlert(true);
-
-      // Redirect to the scoresheet detail page
+      localStorage.setItem("alertMessage", "Scoresheet created successfully"); // Redirect to the scoresheet detail page
       navigate(`/scoresheet/${newScoresheetId}`);
     } catch (error) {
       console.error("Failed to create scoresheet:", error);
@@ -161,11 +158,7 @@ const NewScoresheet = () => {
   return (
     <>
       <Header page="New Scoresheet" />
-      <AlertSnackbar
-        open={openAlert}
-        handleClose={() => setOpenAlert(false)}
-        message="Scoresheet created successfully"
-      />
+      <AlertSnackbar />
       <NewScoresheetForm square={false} elevation={3}>
         <Typography variant="h5">Name:</Typography>
         <TextField

@@ -92,22 +92,24 @@ const EquipmentDetail = () => {
           rows={5}
         />
         <Stack direction="row" spacing={2}>
-          <Button
-            variant="contained"
-            startIcon={<Icon icon="material-symbols:delete-outline" />}
-            color="error"
-            sx={{
-              color: "black",
-              fontSize: 20,
-              lineHeight: 1,
-              padding: "8px",
-              width: "50%",
-              borderRadius: "10px",
-            }}
-            onClick={() => setOpenConfirmDialog(true)}
-          >
-            Delete
-          </Button>
+          {id && (
+            <Button
+              variant="contained"
+              startIcon={<Icon icon="material-symbols:delete-outline" />}
+              color="error"
+              sx={{
+                color: "black",
+                fontSize: 20,
+                lineHeight: 1,
+                padding: "8px",
+                borderRadius: "10px",
+                width: "100%",
+              }}
+              onClick={() => setOpenConfirmDialog(true)}
+            >
+              Delete
+            </Button>
+          )}
           <Button
             variant="contained"
             startIcon={<Icon icon="material-symbols:save-outline" />}
@@ -116,7 +118,7 @@ const EquipmentDetail = () => {
               fontSize: 20,
               lineHeight: 1,
               padding: "8px",
-              width: "50%",
+              width: "100%",
               borderRadius: "10px",
             }}
             onClick={async () => {

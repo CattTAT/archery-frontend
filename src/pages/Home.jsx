@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavLink } from "react-router";
 import instance from "../lib/api";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 const Home = () => {
   const userId = localStorage.getItem("userId");
@@ -49,6 +50,7 @@ const Home = () => {
   return (
     <>
       <Header page="Home" hideBackButton />
+      <AlertSnackbar />
       <Grid
         container
         direction="column"
