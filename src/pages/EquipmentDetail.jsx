@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Header from "../components/Header";
 import { MenuBar } from "../components/MenuBar";
-import { Paper } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import styled from "@mui/material/styles/styled";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -13,6 +13,7 @@ import { useParams } from "react-router";
 import instance from "../lib/api";
 import AlertSnackbar from "../components/AlertSnackbar";
 import { useNavigate } from "react-router";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 const EquipDetailForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -31,16 +32,7 @@ const EquipmentDetail = () => {
   const [name, setName] = React.useState("");
   const [type, setType] = React.useState("");
   const [measurements, setMeasurement] = React.useState("");
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
 
   let params = useParams();
   useEffect(() => {
@@ -62,15 +54,7 @@ const EquipmentDetail = () => {
   return (
     <>
       <Header page={headerTitle} />
-      <AlertSnackbar
-        open={open}
-        handleClose={handleClose}
-        message={
-          id
-            ? "Equipment details successfully updated"
-            : "New equipment successfully created"
-        }
-      />
+      <AlertSnackbar />
       <EquipDetailForm square={false} elevation={3}>
         <Typography variant="h4">Name:</Typography>
         <TextField
@@ -107,34 +91,76 @@ const EquipmentDetail = () => {
           autoComplete="off"
           rows={5}
         />
-        <Button
-          variant="contained"
-          startIcon={<Icon icon="material-symbols:save-outline" />}
-          sx={{
-            color: "black",
-            fontSize: 20,
-            lineHeight: 1,
-            padding: "8px",
-          }}
-          onClick={async () => {
-            const body = {
-              archer_id: userId,
-              name,
-              type,
-              measurements,
-            };
-            if (id) {
-              await instance.patch("equipment/" + id, body);
-            } else {
-              await instance.post("equipment", body);
-              navigate("/equipment/all");
-            }
-            setOpen(true);
-          }}
-        >
-          Save
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            startIcon={<Icon icon="material-symbols:delete-outline" />}
+            color="error"
+            sx={{
+              color: "black",
+              fontSize: 20,
+              lineHeight: 1,
+              padding: "8px",
+              width: "50%",
+              borderRadius: "10px",
+            }}
+            onClick={() => setOpenConfirmDialog(true)}
+          >
+            Delete
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<Icon icon="material-symbols:save-outline" />}
+            sx={{
+              color: "black",
+              fontSize: 20,
+              lineHeight: 1,
+              padding: "8px",
+              width: "50%",
+              borderRadius: "10px",
+            }}
+            onClick={async () => {
+              const body = {
+                archer_id: userId,
+                name,
+                type,
+                measurements,
+              };
+              if (id) {
+                await instance.patch("equipment/" + id, body);
+                localStorage.setItem(
+                  "alertMessage",
+                  "Equipment updated successfully"
+                );
+                window.location.reload();
+              } else {
+                await instance.post("equipment", body);
+                localStorage.setItem(
+                  "alertMessage",
+                  "Equipment created successfully"
+                );
+                navigate("/equipment/all");
+              }
+            }}
+          >
+            Save
+          </Button>
+        </Stack>
       </EquipDetailForm>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={() => setOpenConfirmDialog(false)}
+        onConfirm={async () => {
+          await instance.delete("/equipment/" + id);
+          localStorage.setItem(
+            "alertMessage",
+            "Equipment deleted successfully"
+          );
+          navigate("/equipment/all");
+        }}
+        title="Delete this equipment?"
+      />
+
       <MenuBar />
     </>
   );

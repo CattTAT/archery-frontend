@@ -22,6 +22,8 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import instance from "../lib/api";
 import capitalize from "../lib/capitalize";
+import ConfirmDialog from "../components/ConfirmDialog";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 const EquipmentListPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -51,6 +53,7 @@ const ControlButtons = styled(Button)(() => ({
 }));
 
 const EquipmentCardList = ({ id, name, type, lastModified }) => {
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
   const [typeColor, setTypeColor] = React.useState("");
   useEffect(() => {
     switch (type.toLocaleLowerCase()) {
@@ -100,6 +103,7 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
           variant="contained"
           startIcon={<Icon icon="material-symbols:delete-outline" />}
           color="error"
+          onClick={() => setOpenConfirmDialog(true)}
         >
           Delete
         </ControlButtons>
@@ -114,6 +118,19 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
           Edit
         </ControlButtons>
       </Stack>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={() => setOpenConfirmDialog(false)}
+        onConfirm={async () => {
+          await instance.delete("/equipment/" + id);
+          localStorage.setItem(
+            "alertMessage",
+            "Equipment deleted successfully"
+          );
+          window.location.reload();
+        }}
+        title="Delete this equipment?"
+      />
     </EquipmentCard>
   );
 };
@@ -167,6 +184,7 @@ const Equipment = () => {
   return (
     <>
       <Header page="Equipment" hideBackButton />
+      <AlertSnackbar />
       <EquipmentListPaper square={false} elevation={3}>
         <Button
           variant="contained"
