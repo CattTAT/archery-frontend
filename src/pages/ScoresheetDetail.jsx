@@ -25,7 +25,7 @@ import PropTypes from "prop-types";
 import instance from "../lib/api";
 import AlertSnackbar from "../components/AlertSnackbar";
 import ConfirmDialog from "../components/ConfirmDialog";
-import ArrowLocationDialog from "../components/ArrowLocationDialog";
+import ShootingAdvice from "../components/ShootingAdvice";
 
 const ScoresheetDetailPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -78,8 +78,6 @@ function ScoresheetDetail() {
   const [status, setStatus] = React.useState(0);
   const tableRefs = React.useRef([]);
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
-  const [openArrowLocationDialog, setOpenArrowLocationDialog] =
-    React.useState(false);
 
   const handleCurrentTabChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -188,21 +186,7 @@ function ScoresheetDetail() {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Stack direction="column" spacing={2} mb={2}>
-              <Button
-                variant="contained"
-                color="info"
-                startIcon={<Icon icon="mdi:location" />}
-                onClick={() => {
-                  setOpenArrowLocationDialog(true);
-                }}
-              >
-                Record arrow location
-              </Button>
-              <Typography variant="h6" component="span">
-                Result from shooting advice model
-              </Typography>
-            </Stack>
+            <ShootingAdvice />
           </AccordionDetails>
         </Accordion>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -312,11 +296,6 @@ function ScoresheetDetail() {
         }}
         title="Confirm delete this scoresheet?"
         content="Please note that all the recorded arrows will also be deleted"
-      />
-      <ArrowLocationDialog
-        open={openArrowLocationDialog}
-        onClose={() => setOpenArrowLocationDialog(false)}
-        onConfirm={() => {}}
       />
       <MenuBar />
     </>

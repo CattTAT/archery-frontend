@@ -35,7 +35,8 @@ function ArrowLocationDialog({ open, onClose, onConfirm }) {
       return;
     }
     onConfirm(arrowLocations); // Pass the arrow locations to the parent component
-    setArrowLocations([]); // Reset locations after confirmation
+    setArrowLocations([]);
+    onClose(); // Reset locations after confirmation
   };
 
   return (
