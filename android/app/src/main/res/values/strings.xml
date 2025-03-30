@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">archery-frontend</string>
+    <string name="title_activity_main">archery-frontend</string>
+    <string name="package_name">com.teresafung.archery.app</string>
+    <string name="custom_url_scheme">com.teresafung.archery.app</string>
+</resources>
