@@ -8,6 +8,7 @@ import {
 } from "react";
 import ScoreKeyboard from "./ScoreKeyboard";
 import instance from "../lib/api";
+import { getRealScore, getScoreColor } from "../lib/utils";
 
 const ScoreTable = (
   {
@@ -398,42 +399,10 @@ const ScoreTable = (
   );
 };
 
-function getScoreColor(score) {
-  switch (score) {
-    case "X":
-    case 10:
-    case 9:
-      return "#FFF946";
-    case 8:
-    case 7:
-      return "#FF5959";
-    case 6:
-    case 5:
-      return "#4D99E5";
-    case 4:
-    case 3:
-      return "black";
-    case "M":
-      return "#ABABAB";
-    default:
-      return "white";
-  }
-}
 
 function addScore(a, b) {
   return getRealScore(a) + getRealScore(b);
 }
 
-function getRealScore(score) {
-  switch (score) {
-    case "X":
-      return 10;
-    case "M":
-      return 0;
-    default:
-      return score;
-  }
-}
 
 export default forwardRef(ScoreTable);
-export { getScoreColor };

@@ -1,9 +1,9 @@
 import React, { forwardRef, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { Button, Grid2, Stack, IconButton } from "@mui/material";
-import { getScoreColor } from "./ScoreTable";
 import { Icon } from "@iconify/react";
 import { use } from "react";
+import { getScoreColor } from "../lib/utils";
 
 const ScoreKeyboard = forwardRef(
   (
