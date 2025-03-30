@@ -31,3 +31,7 @@ export function getArrowsByScoresetId(scoresetId) {
     }
   }).then((res) => res.data)
 }
+
+export function getArcher(archerId) {
+  return instance.get('/archers/' + archerId).then((res) => res.data)
+}
