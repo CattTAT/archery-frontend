@@ -1,5 +1,8 @@
+// Archer Level Promo Target
+
 import { Fragment, useEffect, useState } from "react";
 import {
+  getArcher,
   getArrowsByScoresetId,
   getScoresetByScoresheetId,
   getScoresheetsByArcherId,
@@ -15,20 +18,38 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
-import { Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 
-const TotalScoreChart = () => {
+const targets = {
+  "male|18": 600,
+  "female|18": 600,
+  "male|30": 560,
+  "female|30": 560,
+  "male|50": 520,
+  "female|50": 520,
+  "female|60": 540,
+  "male|70": 540,
+  "female|70": 520,
+};
+
+const ArcherLevelChart = () => {
+  const [archer, setArcher] = useState({});
   const [sheetGroups, setSheetGroups] = useState([]);
 
+  const getArcherData = async () => {
+    const archer = await getArcher(localStorage.getItem("userId"));
+    setArcher(archer);
+  };
+
   const getSheetGroups = async () => {
-    // fetch score sets
     const sheets = await getScoresheetsByArcherId(
       localStorage.getItem("userId"),
     );
 
     for (const sheet of sheets) {
-      sheet.roundTotals = [];
+      sheet.total = 0;
 
       for (let i = 1; i <= sheet.round; i++) {
         let roundTotal = 0;
@@ -42,20 +63,19 @@ const TotalScoreChart = () => {
           }, 0);
         }
 
-        sheet.roundTotals.push(roundTotal);
+        sheet.total += roundTotal;
       }
     }
 
-    // group by distance and target face
+    // group by distance
     const groups = sheets.reduce((acc, cur) => {
-      const { distance, target_face } = cur;
-      const groupKey = `${distance}|${target_face}`;
-      const existingGroup = acc.find((item) => item.groupKey === groupKey);
+      const { distance } = cur;
+      const existingGroup = acc.find((item) => item.distance === distance);
 
       if (existingGroup) {
         existingGroup.scoresheets.push(cur);
       } else {
-        acc.push({ groupKey, scoresheets: [cur] });
+        acc.push({ distance, scoresheets: [cur] });
       }
       return acc;
     }, []);
@@ -64,28 +84,26 @@ const TotalScoreChart = () => {
   };
 
   useEffect(() => {
+    getArcherData();
     getSheetGroups();
   }, []);
 
   return (
-    <>
-      {sheetGroups.map(({ groupKey, scoresheets }, i) => {
-        const [distance, targetFace] = groupKey.split("|");
-        const data =
-          scoresheets?.flatMap((sheet) =>
-            sheet.roundTotals.map((total) => ({
-              name:
-                new Date(sheet.created_at).toLocaleDateString() +
-                " " +
-                new Date(sheet.created_at).toLocaleTimeString(),
-              total,
-            })),
-          ) ?? [];
+    <Stack gap={2}>
+      {sheetGroups.map(({ distance, scoresheets }, i) => {
+        const target = targets[`${archer.gender}|${distance}`];
+        const data = scoresheets.map((sheet) => ({
+          date:
+            new Date(sheet.created_at).toLocaleDateString() +
+            " " +
+            new Date(sheet.created_at).toLocaleTimeString(),
+          total: sheet.total,
+        }));
 
         return (
           <Fragment key={i}>
-            <Typography variant="h6" lineHeight={1}>
-              Total Score Distribution <br /> ({distance}m, {targetFace})
+            <Typography variant="h6">
+              Level Promo Target ({distance}m)
             </Typography>
             <ResponsiveContainer
               key={i}
@@ -104,9 +122,8 @@ const TotalScoreChart = () => {
                   bottom: 5,
                 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis domain={[0, 500]} />
+                <XAxis dataKey="date" />
+                <YAxis domain={[0, 1000]}/>
                 <Tooltip />
                 <Legend />
                 <Line
@@ -115,13 +132,14 @@ const TotalScoreChart = () => {
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
                 />
+                <ReferenceLine y={target} strokeDasharray="5 5" stroke="red" label={{ value: `Promo target (${target})`, position: 'insideTopRight' }} />
               </LineChart>
             </ResponsiveContainer>
           </Fragment>
         );
       })}
-    </>
+    </Stack>
   );
 };
 
-export default TotalScoreChart;
+export default ArcherLevelChart;

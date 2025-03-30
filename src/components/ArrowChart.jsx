@@ -16,8 +16,11 @@ const ArrowChart = () => {
 
     // group by score
     const grouped = res.data.reduce((acc, cur) => {
-      if (acc.find((item) => item.score === cur.score)) {
-        acc.find((item) => item.score === cur.score).count += 1;
+      if (cur.score === null || cur.score === "") return acc
+      const existingGroup = acc.find((item) => item.score === cur.score);
+
+      if (existingGroup) {
+        existingGroup.count += 1;
       } else {
         acc.push({ score: cur.score, count: 1 });
       }
@@ -33,7 +36,7 @@ const ArrowChart = () => {
   }, [])
 
   return <Stack gap={2}>
-    <Typography variant="h5">Arrow Score Distributions</Typography>
+    <Typography variant="h6">Arrow Score Distributions</Typography>
     <ResponsiveContainer width="100%" height="100%" minHeight={300}>
       <BarChart
         width={500}
