@@ -28,7 +28,7 @@ const ScoreKeyboard = forwardRef(
       display: "flex",
       visibility: visibility ? "visible" : "hidden",
       zIndex: 10,
-      height: "25%",
+      minHeight: "25%",
       boxShadow: "0px -2px 5px 0px #D8D8D8",
       padding: "8px",
     }));

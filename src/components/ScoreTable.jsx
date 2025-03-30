@@ -44,6 +44,7 @@ const ScoreTable = (
   const tableRef = useRef(null);
   const keyboardRef = useRef(null);
 
+
   const getScoresetId = async (scoresheetId, round) => {
     const data = await instance.get("/scoreset", {
       params: {
@@ -91,7 +92,12 @@ const ScoreTable = (
 
   useEffect(() => {
     if (!scoresetId || scoresetId.length === 0) return;
-    scoresetId.forEach((id) => getArrowDetails(id));
+    // must run one by one
+    (async () => {
+      for (const setId of scoresetId) {
+        await getArrowDetails(setId);
+      }
+    })()
   }, [scoresetId]);
 
   useEffect(() => {
@@ -258,7 +264,7 @@ const ScoreTable = (
       scores: scores.flat(2),
       arrowLocations: arrowLocations.flat(1),
     }),
-    [scores]
+    [scores, scoresetId, arrowDetails, arrowLocations]
   );
 
   return (
