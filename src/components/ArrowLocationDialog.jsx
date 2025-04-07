@@ -59,7 +59,7 @@ function ArrowLocationDialog({ open, onClose, onConfirm }) {
             width: "100%",
             height: "0",
             paddingBottom: "100%", // Maintain aspect ratio
-            backgroundImage: "url('../src/assets/80cm_6rings_target_face.png')",
+            backgroundImage: "url('/assets/80cm_6rings_target_face.png')",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",

@@ -43,7 +43,7 @@ const Header = ({ page, hideBackButton, hidePersonalButton }) => {
           <Icon icon="nrk:back" style={{ fontSize: 36 }} />
         </Fab>
 
-        <Typography variant="h3" maxWidth={3 / 5} fontSize={45} align="center">
+        <Typography variant="h3" maxWidth={3 / 5} fontSize={40} align="center">
           {page}
         </Typography>
         <Fab

@@ -35,6 +35,7 @@ const Home = () => {
     width: "100%",
     height: "100%",
     borderRadius: 10,
+    margin: "0px",
   }));
 
   const retreiveMostRecentIncompleteScoresheet = async () => {
@@ -123,9 +124,12 @@ const Home = () => {
             <Grid item size={4}>
               <HomePageButton
                 variant="contained"
-                startIcon={<Icon icon="mdi:eye-outline" />}
+                startIcon={
+                  <Icon icon="mdi:eye-outline" style={{ fontSize: 14 }} />
+                }
                 component={NavLink}
                 to="/equipment/sight"
+                sx={{ fontSize: 16 }}
               >
                 View Sight
               </HomePageButton>
@@ -134,9 +138,10 @@ const Home = () => {
             <Grid item size={4}>
               <HomePageButton
                 variant="contained"
-                startIcon={<Icon icon="memory:bow" />}
+                startIcon={<Icon icon="memory:bow" style={{ fontSize: 14 }} />}
                 component={NavLink}
                 to="/equipment/bow"
+                sx={{ fontSize: 16 }}
               >
                 View Bow
               </HomePageButton>
@@ -144,9 +149,15 @@ const Home = () => {
             <Grid item size={4}>
               <HomePageButton
                 variant="contained"
-                startIcon={<Icon icon="teenyicons:arrow-solid" />}
+                startIcon={
+                  <Icon
+                    icon="teenyicons:arrow-solid"
+                    style={{ fontSize: 14 }}
+                  />
+                }
                 component={NavLink}
                 to="/equipment/arrows"
+                sx={{ fontSize: 16 }}
               >
                 View Arrows
               </HomePageButton>

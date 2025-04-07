@@ -129,7 +129,8 @@ const EquipmentCardList = ({ id, name, type, lastModified }) => {
           );
           window.location.reload();
         }}
-        title="Delete this equipment?"
+        title="Delete equipment?"
+        content="Are you sure you want to delete this equipment? This action cannot be undone."
       />
     </EquipmentCard>
   );
@@ -200,7 +201,7 @@ const Equipment = () => {
         >
           New Equipment
         </Button>
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl sx={{ m: 0, width: 1 }}>
           <InputLabel id="multiple-checkbox-label">Equipment Type</InputLabel>
           <Select
             labelId="multiple-checkbox-label"

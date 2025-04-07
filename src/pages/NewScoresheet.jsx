@@ -25,6 +25,8 @@ import Button from "@mui/material/Button";
 import instance from "../lib/api";
 import AlertSnackbar from "../components/AlertSnackbar";
 import { useNavigate } from "react-router";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const NewScoresheetForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -69,23 +71,20 @@ const TargetFaceInfoDialog = (props) => {
           tabIndex={-1}
         >
           <Typography variant="h5">122cm 10 Rings:</Typography>
-          <TargetFaceImg
-            src="src\assets\122cm10Rings.jpg"
-            alt="122cm 10 Rings"
-          />
+          <TargetFaceImg src="/assets/122cm10Rings.jpg" alt="122cm 10 Rings" />
 
           <Typography variant="h5">80cm 6 Rings:</Typography>
           <TargetFaceImg
-            src="src\assets\\80cm_6rings_target_face.png"
+            src="/assets/80cm_6rings_target_face.png"
             alt="80cm 6 Rings"
           />
           <Typography variant="h5">40cm 5 Rings 3 Spots Vertical:</Typography>
           <TargetFaceImg
-            src="src\assets\40cm 5 Rings 3 Spots Vertical.jpg"
+            src="/assets/40cm 5 Rings 3 Spots Vertical.jpg"
             alt="40cm 5 Rings Vertical"
           />
           <Typography variant="h5">40cm 10 Rings:</Typography>
-          <TargetFaceImg src="src\assets\40cm10Rings.jpg" alt="40cm 10 Rings" />
+          <TargetFaceImg src="/assets/40cm10Rings.jpg" alt="40cm 10 Rings" />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -112,9 +111,11 @@ const NewScoresheet = () => {
   const [arrowLocation, setArrowLocation] = React.useState(true);
   const [openTargetFaceInfo, setOpenTargeFaceInfo] = React.useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+  const [openLoading, setOpenLoading] = React.useState(false);
 
   const HandleConfirmDialog = async () => {
     setOpenConfirmDialog(false);
+    setOpenLoading(true);
     const scoresheetsBody = {
       archer_id: userId,
       name: name,
@@ -289,6 +290,12 @@ const NewScoresheet = () => {
         title="Confirm Creating Scoresheet?"
         content="Please note that scoresheet settings cannot modified after created"
       />
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open={openLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <MenuBar />
     </>
   );
