@@ -7,7 +7,7 @@ const instance = axios.create({
 export default instance;
 
 export const model = axios.create({
-  baseURL: "http://127.0.0.1:5000/",
+  baseURL: "http://152.42.246.207:2426",
 });
 
 export function getScoresheetsByArcherId() {
